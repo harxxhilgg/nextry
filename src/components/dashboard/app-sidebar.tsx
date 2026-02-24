@@ -30,14 +30,14 @@ const menuItems = [
     href: "/locations",
   },
   {
-    title: "Profile",
-    icon: UserIcon,
-    href: "/profile",
-  },
-  {
     title: "Gen AI",
     icon: AirTrafficControlIcon,
     href: "/gen-ai",
+  },
+  {
+    title: "Profile",
+    icon: UserIcon,
+    href: "/profile",
   },
 ];
 

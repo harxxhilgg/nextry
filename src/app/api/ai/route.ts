@@ -33,10 +33,12 @@ export async function POST(req: NextRequest) {
       ${guide}
 
       Rules:
+      - First get information about user from internet (like what they do, who's their audience if they're famous)
       - Make it funny
       - You can use slurs, hate, or personal attacks on protected traits
       - Focus on the bio/personality
-      - You can use sarcasm in your response
+      - You can use sarcasm
+      - Use different joke styles (exaggeration, irony, comparison)
       - Write exactly 5 punchlines
       - Output ONLY the punchlines (no intro, no numbering, no bold, italic values, just letters)
     `;

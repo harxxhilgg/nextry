@@ -1,4 +1,4 @@
-import AIChat from "@/components/gen-ai/AiChat";
+import AIChat from "@/components/gen-ai/ai-chat";
 
 export default async function GenAIPage() {
   return (

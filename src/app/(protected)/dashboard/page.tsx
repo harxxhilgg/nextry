@@ -1,3 +1,4 @@
+import { CopyBtn } from "@/components/dashboard/copy-btn";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { createClient } from "@/lib/supabase/server";
@@ -22,11 +23,14 @@ export default async function DashboardPage() {
         </div>
 
         <Slider
-          defaultValue={[33]}
+          defaultValue={[50]}
           max={100}
           step={50}
         />
+      </div>
 
+      <div>
+        <CopyBtn />
       </div>
     </div>
   );

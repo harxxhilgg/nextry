@@ -17,14 +17,18 @@ import { Spinner } from "../ui/spinner";
 import { Slider } from "../ui/slider";
 import { toast } from "sonner";
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from "../ui/input-group";
+import { ClipboardTextIcon, CopyIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { RotateCcw } from "lucide-react";
 
 export default function AIChat() {
   const [roast, setRoast] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [lastSubmit, setLastSubmit] = useState<RoastValues | null>(null);
 
   const form = useForm<RoastValues>({
     resolver: zodResolver(roastSchema),
-    mode: "onChange",
+    mode: "onSubmit",
     defaultValues: {
       name: "",
       bio: "",
@@ -46,7 +50,8 @@ export default function AIChat() {
       setRoast(data.roast ?? []);
 
       if (res.ok) {
-        form.reset();
+        setLastSubmit(values); // need this for copy-to-clipboard feat
+        // form.reset();
       }
     } catch (error) {
       console.error("Error: ", error);
@@ -56,6 +61,34 @@ export default function AIChat() {
       });
     } finally {
       setLoading(false);
+    };
+  }
+
+  async function handleCopy() {
+    if (!lastSubmit || roast.length === 0) return;
+
+    const intensityLabel = lastSubmit.level === "mild" ? "Mild 🙂" : lastSubmit.level === "medium" ? "Medium 😈" : "Savage 🔥";
+
+    const text = [
+      `Name: ${lastSubmit.name}`,
+      `Bio: ${lastSubmit.bio}`,
+      ``,
+      `Roast Intensity: ${intensityLabel}`,
+      ``,
+      `Result: `,
+      ``,
+      ...roast.map((line) => `- ${line}`),
+    ].join("\n");
+
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Coped to clipboard", {
+        icon: <ClipboardTextIcon size={20} />,
+        duration: 3000,
+        closeButton: true,
+      });
+    } catch {
+      toast.error("Failed to Copy");
     };
   }
 
@@ -164,24 +197,94 @@ export default function AIChat() {
           />
         </Field>
 
-        <Button
-          type="submit"
-          form="form-rhf-roast"
-          disabled={loading}
-          variant="default"
-          className="flex mt-10 mx-auto cursor-pointer w-40"
-        >
-          {loading && (
-            <Spinner />
-          )}
+        <div className="flex mx-auto mt-10 gap-4 select-none">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                disabled={loading}
+                variant="outline"
+                className="flex w-40 cursor-pointer"
+                onClick={() => form.reset()}
+              >
+                <RotateCcw />
+                Reset
+              </Button>
+            </TooltipTrigger>
 
-          {loading ? "Roasting..." : "Roast me"}
-        </Button>
+            <TooltipContent side="bottom">
+              <p>Reset Form</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="submit"
+                form="form-rhf-roast"
+                disabled={loading}
+                variant="default"
+                className="flex cursor-pointer w-40"
+              >
+                {loading && (
+                  <Spinner />
+                )}
+
+                {!loading && (
+                  <PaperPlaneTiltIcon />
+                )}
+
+                {loading ? "Roasting..." : "Roast me"}
+              </Button>
+            </TooltipTrigger>
+
+            <TooltipContent side="bottom">
+              <p>Start Roasting</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </form>
 
       {/* RESULT */}
       {roast.length > 0 && (
-        <h2 className="text-xl font-semibold">Results:</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Result:</h2>
+
+          <div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-lg"
+                  className="cursor-pointer text-secondary"
+                  onClick={handleCopy}
+                >
+                  <CopyIcon />
+                </Button>
+              </TooltipTrigger>
+
+              <TooltipContent side="bottom">
+                <p>Copy to clipboard</p>
+              </TooltipContent>
+            </Tooltip>
+
+            {/* <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-lg"
+                  className="cursor-pointer text-secondary"
+                >
+                  <ExportIcon />
+                </Button>
+              </TooltipTrigger>
+
+              <TooltipContent side="bottom">
+                <p>Share</p>
+              </TooltipContent>
+            </Tooltip> */}
+          </div>
+        </div>
       )}
 
       {roast.length > 0 && (
