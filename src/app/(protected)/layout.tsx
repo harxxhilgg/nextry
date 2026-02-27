@@ -1,10 +1,10 @@
-import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { PageTitle } from "@/components/dashboard/page-title";
 import { SidebarTriggerBtn } from "@/components/dashboard/sidebar-trigger";
+import AppSidebarWrapper from "@/components/dashboard/app-sidebar-wrapper";
 
 export default async function ProtectedLayout({
   children,
@@ -23,7 +23,7 @@ export default async function ProtectedLayout({
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
-        <AppSidebar user={user} />
+        <AppSidebarWrapper />
 
         <main className="flex-1">
           <div className="flex h-14 items-center border-b px-1">

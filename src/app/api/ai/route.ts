@@ -1,16 +1,31 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
-
-// type Intensity = "mild" | "medium" | "savage";
+import prisma from "@/lib/prisma";
+import { createClient } from "@/lib/supabase/server";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth Check
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Body
     const { name, bio, level } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: "Name required" }, { status: 400 });
+    }
+
+    if (!bio) {
+      return NextResponse.json({ error: "Bio required" }, { status: 400 });
     }
 
     const intensityGuide = {
@@ -58,11 +73,24 @@ export async function POST(req: NextRequest) {
       .map((l) => l.replace(/^[-•*\d.]\s*/, "").trim())
       .filter(Boolean);
 
+    // Save to DB
+    const saved = await prisma.roastResult.create({
+      data: {
+        userId: user.id,
+        name,
+        bio,
+        intensity: level,
+        result: lines,
+      },
+    });
+
     return NextResponse.json({
       roast: lines,
+      resultId: saved.id,
       intensity: level,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: "AI failed" }, { status: 500 });
   }
 }

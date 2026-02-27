@@ -11,12 +11,16 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "../ui/sidebar";
-import { Home } from "lucide-react";
+import { ChevronRight, Home, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AirTrafficControlIcon, FlyingSaucerIcon, MapPinAreaIcon, UserIcon } from "@phosphor-icons/react";
 import { UserNav } from "./user-nav";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 
 const menuItems = [
   {
@@ -28,11 +32,6 @@ const menuItems = [
     title: "Locations",
     icon: MapPinAreaIcon,
     href: "/locations",
-  },
-  {
-    title: "Gen AI",
-    icon: AirTrafficControlIcon,
-    href: "/gen-ai",
   },
   {
     title: "Profile",
@@ -49,10 +48,18 @@ interface AppSidebarProps {
       full_name?: string;
     };
   };
+  roastResults: {
+    id: string;
+    name: string;
+    intensity: string;
+    createdAt: Date;
+  }[];
 }
 
-export function AppSidebar({ user }: AppSidebarProps) {
+export function AppSidebar({ user, roastResults }: AppSidebarProps) {
   const pathname = usePathname();
+
+  const hasRoastResults = roastResults.length > 0;
 
   return (
     <Sidebar collapsible="icon" variant="floating" side="left">
@@ -90,6 +97,70 @@ export function AppSidebar({ user }: AppSidebarProps) {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+
+              <Collapsible defaultOpen={pathname.startsWith("/roaster")} asChild>
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton className="group flex items-center justify-between cursor-pointer">
+                      <div className="flex items-center gap-2">
+                        <AirTrafficControlIcon className="h-4 w-4" />
+                        <span>Roaster</span>
+                      </div>
+
+                      <ChevronRight className="h-4 w-4 transition-transform group-data-[state=open]:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuSubButton asChild isActive={pathname === "/roaster"}>
+                          <Link href="/roaster">
+                            <SquarePenIcon />
+                            New roast
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+
+                      <p className="px-2 text-secondary font-semibold text-xs mt-1">
+                        {hasRoastResults ? "History" : "No history yet"}
+                      </p>
+
+                      <div className="max-h-100 overflow-y-auto pr-1">
+                        {roastResults.map((item) => {
+                          function formatDate(date: Date) {
+                            const d = new Date(date);
+
+                            return d.toLocaleDateString(undefined, {
+                              month: "short",
+                              day: "numeric",
+                            });
+                          };
+
+                          return (
+                            <SidebarMenuSubItem key={item.id}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={pathname === `/roaster/${item.id}`}
+                              >
+                                <Link href={`/roaster/${item.id}`}>
+                                  <div className="flex gap-1 w-full items-center justify-between">
+                                    <span className="truncate">{item.name}</span>
+
+                                    <span className="text-[11px] text-muted-foreground">
+                                      {formatDate(item.createdAt)}
+                                    </span>
+                                  </div>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
+                      </div>
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -4,6 +4,7 @@ import { geist } from "@/lib/fonts";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
   title: "Nextry",
@@ -20,7 +21,9 @@ export default function RootLayout({
       <body className={`${geist.className} antialiased`}>
         <ThemeProvider attribute="class" enableSystem>
           <TooltipProvider>
-            {children}
+            <NuqsAdapter>
+              {children}
+            </NuqsAdapter>
             <Toaster position="top-right" />
           </TooltipProvider>
         </ThemeProvider>

@@ -8,7 +8,7 @@ export const roastSchema = z.object({
   bio: z
     .string()
     .min(2, "Bio must be at least 2 characters")
-    .max(200, "Bio must be at most 200 characters"),
+    .max(400, "Bio must be at most 400 characters"),
   level: z.enum(["mild", "medium", "savage"]),
 });
 

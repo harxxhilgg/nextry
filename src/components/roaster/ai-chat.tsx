@@ -20,19 +20,25 @@ import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from 
 import { ClipboardTextIcon, CopyIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { RotateCcw } from "lucide-react";
+import { useQueryState, parseAsString } from "nuqs";
 
 export default function AIChat() {
   const [roast, setRoast] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastSubmit, setLastSubmit] = useState<RoastValues | null>(null);
 
+  // Query State
+  const [nameQS, setNameQS] = useQueryState("name", parseAsString.withDefault(""));
+  const [bioQS, setBioQS] = useQueryState("bio", parseAsString.withDefault(""));
+  const [levelQS, setLevelQS] = useQueryState("level", parseAsString.withDefault("medium"));
+
   const form = useForm<RoastValues>({
     resolver: zodResolver(roastSchema),
     mode: "onSubmit",
     defaultValues: {
-      name: "",
-      bio: "",
-      level: "medium",
+      name: nameQS,
+      bio: bioQS,
+      level: levelQS as RoastValues["level"],
     },
   });
 
@@ -108,6 +114,11 @@ export default function AIChat() {
 
                   <Input
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      const v = e.target.value;
+                      setNameQS(v.trim() ? v : null)
+                    }}
                     id="form-rhf-name"
                     placeholder="Enter your name... (i.e.: Jeffery Epstein)"
                   />
@@ -133,6 +144,11 @@ export default function AIChat() {
                       {...field}
                       id="form-rhf-bio"
                       placeholder="Tell me about you or your profession..."
+                      onChange={(e) => {
+                        field.onChange(e);
+                        const v = e.target.value;
+                        setBioQS(v.trim() ? v : null)
+                      }}
                       rows={4}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
@@ -140,7 +156,7 @@ export default function AIChat() {
 
                     <InputGroupAddon align="block-end">
                       <InputGroupText>
-                        {field.value.length}/200 characters
+                        {field.value.length}/400 characters
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
@@ -179,7 +195,9 @@ export default function AIChat() {
                       step={1}
                       value={[currentIndex === -1 ? 1 : currentIndex]}
                       onValueChange={(val) => {
-                        field.onChange(levels[val[0]]);
+                        const next = levels[val[0]] as RoastValues["level"];
+                        field.onChange(next);
+                        setLevelQS(next);
                       }}
                     />
                   </div>
@@ -205,7 +223,12 @@ export default function AIChat() {
                 disabled={loading}
                 variant="outline"
                 className="flex w-40 cursor-pointer"
-                onClick={() => form.reset()}
+                onClick={() => {
+                  form.reset();
+                  setNameQS("");
+                  setBioQS("");
+                  setLevelQS("medium");
+                }}
               >
                 <RotateCcw />
                 Reset

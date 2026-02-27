@@ -9,12 +9,12 @@ const routeTitles: Record<string, string> = {
   "/settings": "Settings",
   "/billing": "Billing",
   "/notifications": "Notifications",
-  "/gen-ai": "Gen AI",
+  "/roaster": "Roaster",
 };
 
 export function PageTitle() {
   const pathname = usePathname();
-  const title = routeTitles[pathname] || "Page";
+  const title = routeTitles[pathname] || "";
 
   return <h1 className="text-sm font-semibold">{title}</h1>;
 }

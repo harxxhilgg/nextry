@@ -25,7 +25,7 @@ import {
   Bell,
   LogOut,
   UserRound,
-  MoreVertical,
+  ChevronsUpDownIcon
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -87,7 +87,7 @@ export function UserNav({ user }: UserNavProps) {
               </div>
             </div>
 
-            <MoreVertical className="h-4 w-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+            <ChevronsUpDownIcon size={16} className="text-muted-foreground group-data-[collapsible=icon]:hidden" />
           </div>
         </SidebarMenuButton>
       </DropdownMenuTrigger>

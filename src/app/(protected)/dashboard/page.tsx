@@ -1,4 +1,4 @@
-import { CopyBtn } from "@/components/dashboard/copy-btn";
+import { NUQSTest } from "@/components/dashboard/nuqs-test";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { createClient } from "@/lib/supabase/server";
@@ -29,8 +29,8 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div>
-        <CopyBtn />
+      <div className="flex max-w-lg">
+        <NUQSTest />
       </div>
     </div>
   );

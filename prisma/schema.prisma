@@ -20,3 +20,22 @@ model Location {
   createdBy String
   createdAt DateTime @default(now())
 }
+
+enum RoastIntensity {
+  mild
+  medium
+  savage
+}
+
+model RoastResult {
+  id        String         @id @default(cuid())
+  userId    String
+  name      String
+  bio       String
+  intensity RoastIntensity
+  result    String[]
+  createdAt DateTime       @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+}
