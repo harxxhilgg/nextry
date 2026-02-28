@@ -7,18 +7,27 @@ export default async function Page() {
       <Card>
         <CardHeader>
           <CardTitle className="text-3xl">Privacy Policy</CardTitle>
-          <p className="text-sm text-muted-foreground">Last updated: February 20, 2026</p>
+          <p className="text-sm text-muted-foreground">
+            Last updated: February 20, 2026
+          </p>
         </CardHeader>
         <CardContent className="prose prose-sm dark:prose-invert max-w-none space-y-6">
           <section>
-            <h2 className="text-xl font-semibold mb-3">1. Information We Collect</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              1. Information We Collect
+            </h2>
             <p className="text-muted-foreground">
-              We collect information that you provide directly to us when you create an account, including your name, email address, and authentication credentials from third-party providers (Google, GitHub, Discord).
+              We collect information that you provide directly to us when you
+              create an account, including your name, email address, and
+              authentication credentials from third-party providers (Google,
+              GitHub, Discord).
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">2. How We Use Your Information</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              2. How We Use Your Information
+            </h2>
             <p className="text-muted-foreground">
               We use the information we collect to:
             </p>
@@ -32,9 +41,13 @@ export default async function Page() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">3. Information Sharing</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              3. Information Sharing
+            </h2>
             <p className="text-muted-foreground">
-              We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:
+              We do not sell, trade, or rent your personal information to third
+              parties. We may share your information only in the following
+              circumstances:
             </p>
             <ul className="list-disc pl-6 text-muted-foreground space-y-2">
               <li>With your consent</li>
@@ -45,31 +58,40 @@ export default async function Page() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">4. Third-Party Authentication</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              4. Third-Party Authentication
+            </h2>
             <p className="text-muted-foreground">
-              When you sign in using Google, GitHub, or Discord, we receive basic profile information from these providers as permitted by your privacy settings with them. We use this information solely for authentication purposes.
+              When you sign in using Google, GitHub, or Discord, we receive
+              basic profile information from these providers as permitted by
+              your privacy settings with them. We use this information solely
+              for authentication purposes.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">5. Data Security</h2>
             <p className="text-muted-foreground">
-              We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure.
+              We implement appropriate technical and organizational measures to
+              protect your personal information against unauthorized access,
+              alteration, disclosure, or destruction. However, no method of
+              transmission over the Internet is 100% secure.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">6. Data Retention</h2>
             <p className="text-muted-foreground">
-              We retain your personal information for as long as necessary to provide our services and fulfill the purposes outlined in this privacy policy, unless a longer retention period is required by law.
+              We retain your personal information for as long as necessary to
+              provide our services and fulfill the purposes outlined in this
+              privacy policy, unless a longer retention period is required by
+              law.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">7. Your Rights</h2>
-            <p className="text-muted-foreground">
-              You have the right to:
-            </p>
+            <p className="text-muted-foreground">You have the right to:</p>
             <ul className="list-disc pl-6 text-muted-foreground space-y-2">
               <li>Access and receive a copy of your personal data</li>
               <li>Request correction of inaccurate data</li>
@@ -80,30 +102,45 @@ export default async function Page() {
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">8. Cookies and Tracking</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              8. Cookies and Tracking
+            </h2>
             <p className="text-muted-foreground">
-              We use cookies and similar tracking technologies to track activity on our service and store certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.
+              We use cookies and similar tracking technologies to track activity
+              on our service and store certain information. You can instruct
+              your browser to refuse all cookies or to indicate when a cookie is
+              being sent.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">9. Children's Privacy</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              9. Children's Privacy
+            </h2>
             <p className="text-muted-foreground">
-              Our service is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you are a parent or guardian and believe your child has provided us with personal information, please contact us.
+              Our service is not intended for children under 13 years of age. We
+              do not knowingly collect personal information from children under
+              13. If you are a parent or guardian and believe your child has
+              provided us with personal information, please contact us.
             </p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">10. Changes to Privacy Policy</h2>
+            <h2 className="text-xl font-semibold mb-3">
+              10. Changes to Privacy Policy
+            </h2>
             <p className="text-muted-foreground">
-              We may update our privacy policy from time to time. We will notify you of any changes by posting the new privacy policy on this page and updating the "Last updated" date.
+              We may update our privacy policy from time to time. We will notify
+              you of any changes by posting the new privacy policy on this page
+              and updating the "Last updated" date.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold mb-3">11. Contact Us</h2>
             <p className="text-muted-foreground">
-              If you have any questions about this Privacy Policy, please contact us through our support channels.
+              If you have any questions about this Privacy Policy, please
+              contact us through our support channels.
             </p>
           </section>
 
@@ -116,4 +153,4 @@ export default async function Page() {
       </Card>
     </div>
   );
-};
+}

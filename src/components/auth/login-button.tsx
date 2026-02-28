@@ -2,7 +2,11 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "../ui/button";
-import { DiscordLogoIcon, GithubLogoIcon, GoogleLogoIcon } from "@phosphor-icons/react";
+import {
+  DiscordLogoIcon,
+  GithubLogoIcon,
+  GoogleLogoIcon,
+} from "@phosphor-icons/react";
 
 export function LoginButton() {
   const supabase = createClient();

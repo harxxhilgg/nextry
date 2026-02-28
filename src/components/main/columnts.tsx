@@ -21,7 +21,7 @@ export const columns: ColumnDef<Location>[] = [
   },
   {
     accessorKey: "createdBy",
-    header: "Created By"
+    header: "Created By",
   },
   {
     accessorKey: "createdAt",

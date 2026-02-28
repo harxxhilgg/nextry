@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   description: "Locations page - Nextry",
 };
 
-export default function LocationsLayout({ children }: { children: React.ReactNode }) {
+export default function LocationsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return children;
-};
+}

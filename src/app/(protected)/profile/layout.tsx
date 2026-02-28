@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   description: "Profile page - Nextry",
 };
 
-export default function ProfileLayout({ children }: { children: React.ReactNode }) {
+export default function ProfileLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return children;
-};
+}

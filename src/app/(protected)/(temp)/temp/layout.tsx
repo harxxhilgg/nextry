@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy - Nextry",
-  description: "Privacy Policy of Nextry",
+  title: "Temp - Nextry",
+  description: "Temporary page - Nextry",
 };
 
-export default function LoginLayout({
+export default function TempLayout({
   children,
 }: {
   children: React.ReactNode;

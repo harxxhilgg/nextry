@@ -1,3 +1,4 @@
+import { DeleteRoastButton } from "@/components/roaster/delete-roast-button";
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
@@ -16,15 +17,10 @@ export default async function RoastItem({
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-10">
-
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {roast.name}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{roast.name}</h1>
 
-        <p className="text-secondary text-sm max-w-prose">
-          {roast.bio || ""}
-        </p>
+        <p className="text-secondary text-sm max-w-prose">{roast.bio || ""}</p>
 
         <div className="flex items-center gap-3 text-sm text-secondary">
           <span className="capitalize">Intensity: {roast.intensity}</span>
@@ -48,6 +44,9 @@ export default async function RoastItem({
         ))}
       </div>
 
+      <div className="mt-8">
+        <DeleteRoastButton id={resultId} />
+      </div>
     </div>
   );
 }

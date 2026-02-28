@@ -5,10 +5,12 @@ import prisma from "@/lib/prisma";
 export default async function AppSidebarWrapper() {
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    return <AppSidebar user={{}} roastResults={[]} />
+    return <AppSidebar user={{}} roastResults={[]} />;
   }
 
   const roastResults = await prisma.roastResult.findMany({
@@ -23,5 +25,5 @@ export default async function AppSidebarWrapper() {
     },
   });
 
-  return <AppSidebar user={user} roastResults={roastResults} />
-};
+  return <AppSidebar user={user} roastResults={roastResults} />;
+}

@@ -55,7 +55,9 @@ export default function AuthCodeError() {
         Authentication Error
       </h1>
 
-      <p className="text-sm tracking-wide text-secondary max-w-xs sm:max-w-md">{message}</p>
+      <p className="text-sm tracking-wide text-secondary max-w-xs sm:max-w-md">
+        {message}
+      </p>
 
       <Link href="/">
         <Button variant="outline" size="default" className="rounded-xl">

@@ -12,4 +12,4 @@ export function LoginLogo() {
       <p className="font-semibold">Nextry Inc.</p>
     </div>
   );
-};
+}

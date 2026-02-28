@@ -9,7 +9,8 @@ import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Nextry",
-  description: "Next.js template with supabase authentication, storage, prisma, page routes, etc.",
+  description:
+    "Next.js template with supabase authentication, storage, prisma, page routes, etc.",
 };
 
 export default function RootLayout({

@@ -2,13 +2,21 @@
 
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
 import { useQueryState } from "nuqs";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../ui/input-group";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "../ui/input-group";
 import { BackspaceIcon, KeyIcon, UserIcon } from "@phosphor-icons/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export function NUQSTest() {
   const [apiKey, setAPIKey] = useQueryState("key", { defaultValue: "" });
   const [name, setName] = useQueryState("name", { defaultValue: "" });
+  const [username, setUsername] = useQueryState("username", {
+    defaultValue: "",
+  });
 
   return (
     <FieldGroup>
@@ -34,7 +42,10 @@ export function NUQSTest() {
 
             <InputGroupAddon align="inline-end">
               <TooltipTrigger asChild>
-                <InputGroupButton className="cursor-pointer" onClick={() => setAPIKey(null)}>
+                <InputGroupButton
+                  className="cursor-pointer"
+                  onClick={() => setAPIKey(null)}
+                >
                   <BackspaceIcon className="text-muted-foreground" />
                 </InputGroupButton>
               </TooltipTrigger>
@@ -45,9 +56,7 @@ export function NUQSTest() {
             </InputGroupAddon>
           </InputGroup>
 
-          <FieldDescription>
-            Key: {apiKey || "Not set yet"}
-          </FieldDescription>
+          <FieldDescription>Key: {apiKey || "Not set yet"}</FieldDescription>
         </Field>
       </Tooltip>
 
@@ -73,7 +82,54 @@ export function NUQSTest() {
 
             <InputGroupAddon align="inline-end">
               <TooltipTrigger asChild>
-                <InputGroupButton className="cursor-pointer" onClick={() => setAPIKey(null)}>
+                <InputGroupButton
+                  className="cursor-pointer"
+                  onClick={() => setName(null)}
+                >
+                  <BackspaceIcon className="text-muted-foreground" />
+                </InputGroupButton>
+              </TooltipTrigger>
+
+              <TooltipContent>
+                <p>Clear Field</p>
+              </TooltipContent>
+            </InputGroupAddon>
+          </InputGroup>
+
+          <FieldDescription>Name: {name || "Not set yet"}</FieldDescription>
+        </Field>
+      </Tooltip>
+
+      {/* Username Input */}
+      <Tooltip>
+        <Field>
+          <FieldLabel htmlFor="input-demo-username">Username</FieldLabel>
+
+          <InputGroup>
+            <InputGroupInput
+              id="input-demo-username"
+              placeholder="Enter your username"
+              value={username || ""}
+              onChange={(e) => {
+                const value = e.target.value
+                  .toLowerCase() // Only lowercase allowed
+                  .replace(/\s+/g, "-") // Replace "-" with space
+                  .replace(/[^a-z0-9-]/g, ""); // Don't enter all weird chars
+
+                setUsername(value === "" ? null : value);
+              }}
+            />
+
+            <InputGroupAddon align="inline-start">
+              <UserIcon className="text-muted-foreground" />
+            </InputGroupAddon>
+
+            <InputGroupAddon align="inline-end">
+              <TooltipTrigger asChild>
+                <InputGroupButton
+                  className="cursor-pointer"
+                  onClick={() => setUsername(null)}
+                >
                   <BackspaceIcon className="text-muted-foreground" />
                 </InputGroupButton>
               </TooltipTrigger>
@@ -85,10 +141,10 @@ export function NUQSTest() {
           </InputGroup>
 
           <FieldDescription>
-            Name: {name || "Not set yet"}
+            Username: {username || "Not set yet"}
           </FieldDescription>
         </Field>
       </Tooltip>
     </FieldGroup>
   );
-};
+}

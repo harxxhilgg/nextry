@@ -18,9 +18,17 @@ import {
 import { ChevronRight, Home, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AirTrafficControlIcon, FlyingSaucerIcon, MapPinAreaIcon, UserIcon } from "@phosphor-icons/react";
+import {
+  AirTrafficControlIcon,
+  FlyingSaucerIcon,
+  MapPinAreaIcon,
+} from "@phosphor-icons/react";
 import { UserNav } from "./user-nav";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
 
 const menuItems = [
   {
@@ -32,11 +40,6 @@ const menuItems = [
     title: "Locations",
     icon: MapPinAreaIcon,
     href: "/locations",
-  },
-  {
-    title: "Profile",
-    icon: UserIcon,
-    href: "/profile",
   },
 ];
 
@@ -69,7 +72,7 @@ export function AppSidebar({ user, roastResults }: AppSidebarProps) {
           className="flex items-center group-data-[collapsible=icon]:justify-center p-2 gapk-2 mt-2 rounded-lg transition-all duration-200 cursor-pointer hover:bg-black/10 hover:dark:bg-white/10 text-secondary hover:text-primary"
         >
           <FlyingSaucerIcon
-            className="group-data-[collapsible=icon]:w-6 group-data-[collapsible=icon]:h-6"
+            className="group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-4"
             size={24}
             color="currentColor"
           />
@@ -98,7 +101,10 @@ export function AppSidebar({ user, roastResults }: AppSidebarProps) {
                 </SidebarMenuItem>
               ))}
 
-              <Collapsible defaultOpen={pathname.startsWith("/roaster")} asChild>
+              <Collapsible
+                defaultOpen={pathname.startsWith("/roaster")}
+                asChild
+              >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton className="group flex items-center justify-between cursor-pointer">
@@ -114,7 +120,10 @@ export function AppSidebar({ user, roastResults }: AppSidebarProps) {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       <SidebarMenuSubItem>
-                        <SidebarMenuSubButton asChild isActive={pathname === "/roaster"}>
+                        <SidebarMenuSubButton
+                          asChild
+                          isActive={pathname === "/roaster"}
+                        >
                           <Link href="/roaster">
                             <SquarePenIcon />
                             New roast
@@ -135,17 +144,22 @@ export function AppSidebar({ user, roastResults }: AppSidebarProps) {
                               month: "short",
                               day: "numeric",
                             });
-                          };
+                          }
 
                           return (
-                            <SidebarMenuSubItem key={item.id}>
+                            <SidebarMenuSubItem
+                              key={item.id}
+                              className="my-0.5"
+                            >
                               <SidebarMenuSubButton
-                                asChild
                                 isActive={pathname === `/roaster/${item.id}`}
+                                asChild
                               >
                                 <Link href={`/roaster/${item.id}`}>
-                                  <div className="flex gap-1 w-full items-center justify-between">
-                                    <span className="truncate">{item.name}</span>
+                                  <div className="flex gap-1 w-full items-end justify-between">
+                                    <span className="truncate">
+                                      {item.name}
+                                    </span>
 
                                     <span className="text-[11px] text-muted-foreground">
                                       {formatDate(item.createdAt)}

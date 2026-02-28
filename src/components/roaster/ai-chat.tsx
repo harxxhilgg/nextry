@@ -16,21 +16,39 @@ import { roastSchema, RoastValues } from "@/lib/schemas";
 import { Spinner } from "../ui/spinner";
 import { Slider } from "../ui/slider";
 import { toast } from "sonner";
-import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from "../ui/input-group";
-import { ClipboardTextIcon, CopyIcon, PaperPlaneTiltIcon } from "@phosphor-icons/react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroupTextarea,
+} from "../ui/input-group";
+import {
+  ClipboardTextIcon,
+  CopyIcon,
+  PaperPlaneTiltIcon,
+} from "@phosphor-icons/react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { RotateCcw } from "lucide-react";
 import { useQueryState, parseAsString } from "nuqs";
+import { useRouter } from "next/navigation";
 
 export default function AIChat() {
+  const router = useRouter();
+
   const [roast, setRoast] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [lastSubmit, setLastSubmit] = useState<RoastValues | null>(null);
 
   // Query State
-  const [nameQS, setNameQS] = useQueryState("name", parseAsString.withDefault(""));
+  const [nameQS, setNameQS] = useQueryState(
+    "name",
+    parseAsString.withDefault(""),
+  );
   const [bioQS, setBioQS] = useQueryState("bio", parseAsString.withDefault(""));
-  const [levelQS, setLevelQS] = useQueryState("level", parseAsString.withDefault("medium"));
+  const [levelQS, setLevelQS] = useQueryState(
+    "level",
+    parseAsString.withDefault("medium"),
+  );
 
   const form = useForm<RoastValues>({
     resolver: zodResolver(roastSchema),
@@ -57,7 +75,7 @@ export default function AIChat() {
 
       if (res.ok) {
         setLastSubmit(values); // need this for copy-to-clipboard feat
-        // form.reset();
+        router.refresh(); // need this so we can see new roast in sidebar history
       }
     } catch (error) {
       console.error("Error: ", error);
@@ -67,13 +85,18 @@ export default function AIChat() {
       });
     } finally {
       setLoading(false);
-    };
+    }
   }
 
   async function handleCopy() {
     if (!lastSubmit || roast.length === 0) return;
 
-    const intensityLabel = lastSubmit.level === "mild" ? "Mild 🙂" : lastSubmit.level === "medium" ? "Medium 😈" : "Savage 🔥";
+    const intensityLabel =
+      lastSubmit.level === "mild"
+        ? "Mild 🙂"
+        : lastSubmit.level === "medium"
+          ? "Medium 😈"
+          : "Savage 🔥";
 
     const text = [
       `Name: ${lastSubmit.name}`,
@@ -95,7 +118,7 @@ export default function AIChat() {
       });
     } catch {
       toast.error("Failed to Copy");
-    };
+    }
   }
 
   return (
@@ -117,14 +140,20 @@ export default function AIChat() {
                     onChange={(e) => {
                       field.onChange(e);
                       const v = e.target.value;
-                      setNameQS(v.trim() ? v : null)
+                      setNameQS(v.trim() ? v : null);
                     }}
                     id="form-rhf-name"
                     placeholder="Enter your name... (i.e.: Jeffery Epstein)"
                   />
 
                   {fieldState.invalid && (
-                    <FieldError errors={form.formState.errors.name ? [form.formState.errors.name] : undefined} />
+                    <FieldError
+                      errors={
+                        form.formState.errors.name
+                          ? [form.formState.errors.name]
+                          : undefined
+                      }
+                    />
                   )}
                 </Field>
               )}
@@ -147,7 +176,7 @@ export default function AIChat() {
                       onChange={(e) => {
                         field.onChange(e);
                         const v = e.target.value;
-                        setBioQS(v.trim() ? v : null)
+                        setBioQS(v.trim() ? v : null);
                       }}
                       rows={4}
                       className="min-h-24 resize-none"
@@ -249,13 +278,9 @@ export default function AIChat() {
                 variant="default"
                 className="flex cursor-pointer w-40"
               >
-                {loading && (
-                  <Spinner />
-                )}
+                {loading && <Spinner />}
 
-                {!loading && (
-                  <PaperPlaneTiltIcon />
-                )}
+                {!loading && <PaperPlaneTiltIcon />}
 
                 {loading ? "Roasting..." : "Roast me"}
               </Button>
@@ -316,9 +341,7 @@ export default function AIChat() {
             <li key={index} className="flex gap-6">
               <span className="mt-2 h-1.5 w-1.5 rounded-full bg-secondary/70 shrink-0" />
 
-              <p className="tracking-[0.005em]">
-                {item}
-              </p>
+              <p className="tracking-[0.005em]">{item}</p>
             </li>
           ))}
         </ul>

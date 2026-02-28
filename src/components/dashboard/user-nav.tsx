@@ -25,7 +25,7 @@ import {
   Bell,
   LogOut,
   UserRound,
-  ChevronsUpDownIcon
+  ChevronsUpDownIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -47,7 +47,7 @@ interface UserNavProps {
 export function UserNav({ user }: UserNavProps) {
   const supabase = createClient();
   const router = useRouter();
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState<boolean>(false);
 
   const handleLogout = async () => {
     const { error } = await supabase.auth.signOut();
@@ -87,7 +87,10 @@ export function UserNav({ user }: UserNavProps) {
               </div>
             </div>
 
-            <ChevronsUpDownIcon size={16} className="text-muted-foreground group-data-[collapsible=icon]:hidden" />
+            <ChevronsUpDownIcon
+              size={15}
+              className="text-muted-foreground group-data-[collapsible=icon]:hidden"
+            />
           </div>
         </SidebarMenuButton>
       </DropdownMenuTrigger>
@@ -151,9 +154,12 @@ export function UserNav({ user }: UserNavProps) {
       <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+            <AlertDialogTitle>
+              Are you sure you want to log out?
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              You will be redirected to the home page and will need to log in again to access your account.
+              You will be redirected to the home page and will need to log in
+              again to access your account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

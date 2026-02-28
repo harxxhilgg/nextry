@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   description: "Roaster page of Nextry",
 };
 
-export default function TestGenAILayout({ children }: { children: React.ReactNode }) {
+export default function TestGenAILayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return children;
-};
+}
