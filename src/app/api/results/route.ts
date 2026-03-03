@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
+import { getRoastResults } from "@/lib/roast-results";
 
 export async function GET(req: NextRequest) {
   try {
@@ -14,25 +14,9 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url);
-    const cursor = searchParams.get("cursor");
+    const cursor = searchParams.get("cursor") ?? undefined;
 
-    const results = await prisma.roastResult.findMany({
-      where: { userId: user.id },
-      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
-      take: 20,
-      ...(cursor && {
-        skip: 1,
-        cursor: {
-          id: cursor,
-        },
-      }),
-      select: {
-        id: true,
-        name: true,
-        intensity: true,
-        createdAt: true,
-      },
-    });
+    const results = await getRoastResults(user.id, cursor);
 
     return NextResponse.json(results);
   } catch (e) {
