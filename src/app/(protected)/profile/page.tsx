@@ -2,10 +2,19 @@ import { createClient } from "@/lib/supabase/server";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
+import { Suspense } from "react";
+import ProfileSkeleton from "./loading";
 
-export default async function ProfilePage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <Profile />
+    </Suspense>
+  );
+};
+
+export async function Profile() {
   const supabase = await createClient();
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -27,7 +36,7 @@ export default async function ProfilePage() {
           <AvatarFallback>{name?.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
 
-        <div>
+        <div className="space-y-2">
           <h2 className="text-xl font-semibold">{name}</h2>
 
           {joined && (

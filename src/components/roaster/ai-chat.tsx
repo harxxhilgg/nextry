@@ -31,6 +31,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { RotateCcw } from "lucide-react";
 import { useQueryState, parseAsString } from "nuqs";
 import { useRouter } from "next/navigation";
+import { AiChatResultSkeleton } from "../main/skeletons";
 
 export default function AIChat() {
   const router = useRouter();
@@ -143,7 +144,7 @@ export default function AIChat() {
                       setNameQS(v.trim() ? v : null);
                     }}
                     id="form-rhf-name"
-                    placeholder="Enter your name... (i.e.: Jeffery Epstein)"
+                    placeholder="Enter your name... (i.e.: Dexter)"
                   />
 
                   {fieldState.invalid && (
@@ -172,7 +173,7 @@ export default function AIChat() {
                     <InputGroupTextarea
                       {...field}
                       id="form-rhf-bio"
-                      placeholder="Tell me about you or your profession..."
+                      placeholder="Tell me about you or your profession... (i.e.: Blood Spatter Analyst)"
                       onChange={(e) => {
                         field.onChange(e);
                         const v = e.target.value;
@@ -293,45 +294,28 @@ export default function AIChat() {
         </div>
       </form>
 
-      {/* RESULT */}
-      {roast.length > 0 && (
+      {loading && <AiChatResultSkeleton />}
+
+      {!loading && roast.length > 0 && (
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Result:</h2>
 
-          <div>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-lg"
-                  className="cursor-pointer text-secondary"
-                  onClick={handleCopy}
-                >
-                  <CopyIcon />
-                </Button>
-              </TooltipTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-lg"
+                className="cursor-pointer text-secondary"
+                onClick={handleCopy}
+              >
+                <CopyIcon />
+              </Button>
+            </TooltipTrigger>
 
-              <TooltipContent side="bottom">
-                <p>Copy to clipboard</p>
-              </TooltipContent>
-            </Tooltip>
-
-            {/* <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon-lg"
-                  className="cursor-pointer text-secondary"
-                >
-                  <ExportIcon />
-                </Button>
-              </TooltipTrigger>
-
-              <TooltipContent side="bottom">
-                <p>Share</p>
-              </TooltipContent>
-            </Tooltip> */}
-          </div>
+            <TooltipContent side="bottom">
+              <p>Copy to clipboard</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       )}
 

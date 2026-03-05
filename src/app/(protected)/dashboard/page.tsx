@@ -1,6 +1,16 @@
 import { createClient } from "@/lib/supabase/server";
+import { Suspense } from "react";
+import DashboardLoading from "./loading";
 
-export default async function DashboardPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<DashboardLoading />}>
+      <Dashboard />
+    </Suspense>
+  );
+};
+
+export async function Dashboard() {
   const supabase = await createClient();
   const {
     data: { user },

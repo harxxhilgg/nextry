@@ -117,7 +117,7 @@ export function AppSidebar({ user, roastResults }: AppSidebarProps) {
 
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      <SidebarMenuSubItem>
+                      <SidebarMenuSubItem className="mt-1">
                         <SidebarMenuSubButton isActive={pathname === "/roaster"} asChild>
                           <Link href="/roaster">
                             <SquarePenIcon />
