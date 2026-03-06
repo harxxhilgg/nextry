@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -125,6 +127,9 @@
     @apply border-border outline-ring/50;
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
     @apply bg-background text-foreground;
@@ -138,5 +143,31 @@
   ::-moz-selection {
     background-color: var(--selection-bg);
     color: var(--selection-text);
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    position: relative;
+  }
+
+  .prose .heading-anchor {
+    position: absolute;
+    left: 0;
+    transform: translateX(-1.25em);
+    opacity: 0;
+    color: var(--secondary) !important;
+    text-decoration: none !important;
+    transition: opacity 0.2s ease;
+  }
+
+  .prose .heading-anchor::before {
+    content: "#";
+  }
+
+  .prose h1:hover .heading-anchor,
+  .prose h2:hover .heading-anchor,
+  .prose h3:hover .heading-anchor {
+    opacity: 1;
   }
 }

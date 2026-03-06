@@ -1,8 +1,28 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 };
 
-export default nextConfig;
+const withMDX = createMDX({
+  extension: /\.(md|mdx)$/,
+  options: {
+    remarkPlugins: ["remark-gfm"],
+    rehypePlugins: [
+      "rehype-slug",
+      [
+        "rehype-autolink-headings",
+        {
+          behavior: "prepend",
+          properties: {
+            className: ["heading-anchor"],
+          },
+        },
+      ],
+    ],
+  },
+});
+
+export default withMDX(nextConfig);
