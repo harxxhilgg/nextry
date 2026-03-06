@@ -116,7 +116,9 @@ export function UserNav({ user }: UserNavProps) {
               </span>
             </div>
 
-            <ThemeToggleClient />
+            <div className="-mr-2">
+              <ThemeToggleClient />
+            </div>
           </div>
         </DropdownMenuLabel>
 

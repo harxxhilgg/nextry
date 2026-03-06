@@ -1,6 +1,6 @@
 import Test from "@/components/test-new/markdown/test.mdx";
 
-export default function Page() {
+export default async function Page() {
   return (
     <div>
       <h1 className="text-3xl">Lorem ipsum dolor sit.</h1>
