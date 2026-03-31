@@ -13,9 +13,7 @@ export default async function Home() {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <AvatarIcons />
 
-          <p
-            className={`${geistMono.className} font-light text-center sm:text-left text-sm max-w-60 tracking-wide text-secondary`}
-          >
+          <p className={`${geistMono.className} font-light text-center sm:text-left text-sm max-w-60 tracking-wide text-secondary`}>
             START <span className="text-primary">FREE</span>,{" "}
             <span className="text-primary">SCALE</span> WHEN YOU&apos;RE READY.
           </p>

@@ -17,16 +17,16 @@ export function ThemeToggle() {
       <TooltipTrigger asChild>
         <Button
           variant="ghost"
-          size="icon"
-          className="rounded-md active:scale-95 h-7 w-7 cursor-pointer"
+          size="icon-lg"
+          className="rounded-xl active:scale-95 cursor-pointer"
           onClick={() => setTheme(isDark ? "light" : "dark")}
         >
-          {isDark ? <Sun size={14} /> : <Moon size={14} />}
+          {isDark ? <Sun size={50} className="size-4.5" /> : <Moon size={50} className="size-4.5" />}
         </Button>
       </TooltipTrigger>
 
       <TooltipContent>
-        <p>Switch Theme</p>
+        <p className="font-medium">Switch Theme</p>
       </TooltipContent>
     </Tooltip>
   );

@@ -84,6 +84,10 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
   --selection-bg: oklch(0.141 0.005 285.823);
   --selection-text: oklch(1 0 0);
+  /* gradients */
+  --gradient-start: #4338ca;
+  --gradient-mid: #0ea5e9;
+  --gradient-end: #9333ea;
 }
 
 .dark {
@@ -120,18 +124,20 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
   --selection-bg: oklch(0.985 0 0);
   --selection-text: oklch(0.141 0.005 285.823);
+  /* gradients */
+  --gradient-start: #5227ff;
+  --gradient-mid: #ff9ffc;
+  --gradient-end: #b19eef;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
     @apply border-border outline-ring/50;
   }
   html {
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground;
     @apply bg-background text-foreground;
   }
 

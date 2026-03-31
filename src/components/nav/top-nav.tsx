@@ -8,7 +8,7 @@ import { PolygonIcon } from "@phosphor-icons/react";
 
 export default function TopNav() {
   return (
-    <div className="flex items-center justify-between w-full h-18 sm:h-20 px-4 py-3 sm:py-4 sm:px-4 select-none transition-all">
+    <div className="flex items-center justify-between w-full h-16 sm:h-18 px-4 py-3 sm:py-4 sm:px-4 select-none transition-all">
       <Link
         href="/"
         className="flex items-center gap-2 active:scale-95 transition-all"
@@ -24,7 +24,7 @@ export default function TopNav() {
         <div className="mr-4">
           <Button
             variant="outline"
-            className="cursor-pointer rounded-xl font-semibold"
+            className="cursor-pointer font-semibold h-10 rounded-2xl"
             asChild
           >
             <Link href="/login">Sign In</Link>
