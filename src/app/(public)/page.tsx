@@ -24,14 +24,13 @@ export default async function Home() {
             id="main-heading"
             className={`text-center text-3xl sm:text-6xl font-semibold leading-tight`}
           >
-            Ship next.js apps with supabase & vercel faster.
+            Ship Next.js apps faster with Supabase and Vercel.
           </h1>
         </div>
 
-        <div className="w-full max-w-sm sm:max-w-xl">
+        <div className="w-full max-w-sm sm:max-w-2xl">
           <p className="text-secondary text-sm sm:text-[16px] tracking-wide leading-relaxed mx-8 text-center">
-            Add values of environment variables in <FileText file=".env" /> &
-            make sure to change values in <FileText file="data.tsx" /> , etc.
+            Get started by populating your <FileText file=".env" /> file with the required variables and updating the configuration files to match your project.
           </p>
         </div>
 

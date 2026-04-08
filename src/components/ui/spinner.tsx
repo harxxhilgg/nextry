@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import { SphereIcon } from "@phosphor-icons/react";
+import { SealIcon } from "@phosphor-icons/react";
 
 function Spinner({ className, ...props }: React.ComponentProps<"svg">) {
   return (
-    <SphereIcon
+    <SealIcon
       role="status"
       aria-label="Loading"
       className={cn("size-4 animate-spin", className)}
