@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { PageTitle } from "@/components/dashboard/page-title";
 import { SidebarTriggerBtn } from "@/components/dashboard/sidebar-trigger";
 import AppSidebarWrapper from "@/components/dashboard/app-sidebar-wrapper";
+import StoreProvider from "@/lib/store/StoreProvider";
 
 export default async function ProtectedLayout({
   children,
@@ -20,23 +21,32 @@ export default async function ProtectedLayout({
     redirect("/login");
   }
 
+  const serializedUser = {
+    id: user.id,
+    email: user.email || null,
+    user_metadata: user.user_metadata || null,
+    created_at: user.created_at || null,
+  };
+
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <AppSidebarWrapper />
+    <StoreProvider initialUser={serializedUser}>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <AppSidebarWrapper />
 
-        <main className="flex-1">
-          <div className="flex h-14 items-center border-b px-1">
-            <SidebarTriggerBtn />
+          <main className="flex-1">
+            <div className="flex h-14 items-center border-b px-1">
+              <SidebarTriggerBtn />
 
-            <Separator orientation="vertical" className="ml-2 mr-3 h-6" />
+              <Separator orientation="vertical" className="ml-1 mr-3 h-6" />
 
-            <PageTitle />
-          </div>
+              <PageTitle />
+            </div>
 
-          <div className="p-6">{children}</div>
-        </main>
-      </div>
-    </SidebarProvider>
+            <div className="p-6">{children}</div>
+          </main>
+        </div>
+      </SidebarProvider>
+    </StoreProvider>
   );
 }
