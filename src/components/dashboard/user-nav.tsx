@@ -154,19 +154,21 @@ export function UserNav({ user }: UserNavProps) {
       </DropdownMenuContent>
 
       <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
+        <AlertDialogContent size="sm" className="p-0 gap-0 overflow-hidden min-w-100">
+          <AlertDialogHeader className="p-6 gap-4">
             <AlertDialogTitle>
               Are you sure you want to log out?
             </AlertDialogTitle>
+
             <AlertDialogDescription>
-              You will be redirected to the home page and will need to log in
-              again to access your account.
+              You will be redirected to the login page and will need to log in again to access your account.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onClick={handleLogout}>
+
+          <AlertDialogFooter className="border-t bg-muted/30 p-4 sm:p-4">
+            <AlertDialogCancel className="mt-0 cursor-pointer active:translate-y-px">Cancel</AlertDialogCancel>
+
+            <AlertDialogAction variant="destructive" className="cursor-pointer active:translate-y-px" onClick={handleLogout}>
               Log out
             </AlertDialogAction>
           </AlertDialogFooter>

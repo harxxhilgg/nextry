@@ -13,3 +13,20 @@ export const roastSchema = z.object({
 });
 
 export type RoastValues = z.infer<typeof roastSchema>;
+
+export const userSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Name is required.")
+    .max(20, "Name cannot exceed 20 chars."),
+  age: z
+    .number()
+    .min(1, "Age must be valid.")
+    .max(100, "Please enter appropriate age."),
+  location: z
+    .string()
+    .min(2, "Location is required.")
+    .max(20, "Location cannot exceed 20 chars."),
+});
+
+export type UserData = z.infer<typeof userSchema>;

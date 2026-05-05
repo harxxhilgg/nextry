@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { getWhatStoredByKey, setRedisString, clearWhatStoredByKey } from "./actions";
+import { getWhatStoredByKey, setRedisString, clearWhatStoredByKey, setJsonRedis, getJsonRedis } from "./actions";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Field, FieldDescription, FieldLabel } from "../ui/field";
 import { Spinner } from "../ui/spinner";
 import { Separator } from "../ui/separator";
 import { useAppSelector } from "@/lib/store/hooks";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Skeleton } from "../ui/skeleton";
+import { UserData, userSchema } from "@/lib/schemas";
+import { toast } from "sonner";
 
 export default function RedisTestPage() {
   const userId = useAppSelector((state) => state.user.id);
@@ -16,6 +21,20 @@ export default function RedisTestPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [key, setKey] = useState<string>("");
+  const [dbJSONValue, setDbJSONValue] = useState<UserData | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<UserData>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      // name: "",
+      // location: "",
+      // age: 22,
+    },
+  });
 
   async function handleSet(value: string, userId: string) {
     setLoading(true);
@@ -55,12 +74,39 @@ export default function RedisTestPage() {
     };
   };
 
+  async function getJSON() {
+    setLoading(true);
+
+    try {
+      const result = await getJsonRedis(userId!);
+      setDbJSONValue(result);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    };
+  };
+
+  const onSubmit = async (data: UserData) => {
+    toast.promise(
+      async () => {
+        await setJsonRedis(userId!, data);
+        // do extra thing(s) here
+      },
+      {
+        loading: "Updating data...",
+        success: "Data has been updated!",
+        error: "Failed to update data!",
+      }
+    );
+  };
+
   return (
     <div className="space-y-10">
       <h1 className="font-semibold text-xl">Redis Common Strings</h1>
 
       {/* String Input Field */}
-      <div className="w-full max-w-lg">
+      <div className="w-full max-w-xl">
         <Field>
           <span className="flex gap-1">
             <FieldLabel htmlFor="redis-demo-string-key">Set Redis String</FieldLabel>
@@ -93,9 +139,9 @@ export default function RedisTestPage() {
       </div>
 
       {/* Check What is Stored in Each Key - Input */}
-      <div className="w-full max-w-lg">
+      <div className="w-full max-w-xl">
         <Field>
-          <FieldLabel htmlFor="redis-demo-key">Check What is Stored in a Particular String</FieldLabel>
+          <FieldLabel htmlFor="redis-demo-key">Check What is Stored in a Particular Key</FieldLabel>
 
           <Input
             id="redis-demo-key"
@@ -105,7 +151,11 @@ export default function RedisTestPage() {
           />
 
           <FieldDescription>
-            Enter your key of redis string, you will be able to find out what in it.
+            Enter the name of your key (Look above in parentheses) and enter it here,
+          </FieldDescription>
+
+          <FieldDescription>
+            Full key would be look like <strong>{`test-string:${userId}`}</strong>
           </FieldDescription>
         </Field>
       </div>
@@ -144,6 +194,103 @@ export default function RedisTestPage() {
       </div>
 
       <Separator orientation="horizontal" />
+
+      <div className="w-full max-w-xl">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
+          {/* Name */}
+          <Field>
+            <FieldLabel htmlFor="rhf-name">Name</FieldLabel>
+
+            <Input
+              id="rhf-name"
+              placeholder="Name"
+              {...register("name")}
+            />
+
+            {errors.name && (
+              <FieldDescription className="text-red-500">
+                {errors.name.message}
+              </FieldDescription>
+            )}
+          </Field>
+
+          {/* Age */}
+          <Field>
+            <FieldLabel id="rhf-age">Age</FieldLabel>
+
+            <Input
+              id="rhf-age"
+              type="number"
+              placeholder="Age"
+              {...register("age", { valueAsNumber: true })}
+            />
+
+            {errors.age && (
+              <FieldDescription className="text-red-500">
+                {errors.age.message}
+              </FieldDescription>
+            )}
+          </Field>
+
+          {/* Location */}
+          <Field>
+            <FieldLabel htmlFor="rhf-location">Location</FieldLabel>
+
+            <Input
+              id="rhf-location"
+              placeholder="Location"
+              {...register("location")}
+            />
+
+            {errors.location && (
+              <FieldDescription className="text-red-500">
+                {errors.location.message}
+              </FieldDescription>
+            )}
+          </Field>
+
+          <div className="mt-8">
+            <Button
+              type="submit"
+              variant="default"
+              className="cursor-pointer rounded-xl w-26"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <Spinner className="size-6" />
+              ) : (
+                <p>Save</p>
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      <Button
+        variant="outline"
+        onClick={getJSON}
+        disabled={loading}
+        className="cursor-pointer rounded-xl"
+      >
+        Get JSON
+      </Button>
+
+      {loading ? (
+        <div className="space-y-2">
+          <Skeleton className="h-5 w-40" />
+          <Skeleton className="h-5 w-20" />
+          <Skeleton className="h-5 w-60" />
+        </div>
+      ) : (
+        <div>
+          <p>Name: {dbJSONValue?.name}</p>
+          <p>Age: {dbJSONValue?.age}</p>
+          <p>Location: {dbJSONValue?.location}</p>
+        </div>
+      )}
     </div>
   );
 }
