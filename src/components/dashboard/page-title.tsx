@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { hanken } from "@/lib/fonts";
 
 // Provide friendly names for specific segments.
 // The fallback splits on hyphens and capitalizes automatically.
@@ -55,7 +56,7 @@ export function PageTitle() {
             <React.Fragment key={href}>
               <BreadcrumbItem className="hidden md:block">
                 {isLast ? (
-                  <BreadcrumbPage className="font-semibold">{title}</BreadcrumbPage>
+                  <BreadcrumbPage className={`${hanken.className} font-semibold text-[15px]`}>{title}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
                     <Link href={href}>

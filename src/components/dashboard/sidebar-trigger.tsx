@@ -13,7 +13,8 @@ export function SidebarTriggerBtn() {
 
       <TooltipContent side="right" className="flex gap-1 items-center">
         <CommandIcon size={19} />
-        <p className="text-[15px] font-medium">B</p>
+        <span className="text-lg">+</span>
+        <p className="text-[17px] font-medium">B</p>
       </TooltipContent>
     </Tooltip>
   );

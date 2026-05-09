@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Skeleton } from "../ui/skeleton";
 import { UserData, userSchema } from "@/lib/schemas";
 import { toast } from "sonner";
+import { hanken } from "@/lib/fonts";
 
 export default function RedisTestPage() {
   const userId = useAppSelector((state) => state.user.id);
@@ -26,6 +27,7 @@ export default function RedisTestPage() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<UserData>({
     resolver: zodResolver(userSchema),
@@ -76,6 +78,7 @@ export default function RedisTestPage() {
 
   async function getJSON() {
     setLoading(true);
+    // await delay(5000);
 
     try {
       const result = await getJsonRedis(userId!);
@@ -95,15 +98,21 @@ export default function RedisTestPage() {
       },
       {
         loading: "Updating data...",
-        success: "Data has been updated!",
+        success: () => {
+          reset(); // Reset the form to empty state
+          getJSON(); // Fetching updated data
+          return "Data has been updated!";
+        },
         error: "Failed to update data!",
+        closeButton: true,
+        // duration: 3000,
       }
     );
   };
 
   return (
     <div className="space-y-10">
-      <h1 className="font-semibold text-xl">Redis Common Strings</h1>
+      <h1 className={`${hanken.className} font-semibold text-xl`}>Redis Common Strings</h1>
 
       {/* String Input Field */}
       <div className="w-full max-w-xl">
@@ -279,7 +288,7 @@ export default function RedisTestPage() {
       </Button>
 
       {loading ? (
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <Skeleton className="h-5 w-40" />
           <Skeleton className="h-5 w-20" />
           <Skeleton className="h-5 w-60" />
