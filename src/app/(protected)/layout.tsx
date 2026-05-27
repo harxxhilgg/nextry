@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { createClient } from "@/lib/supabase/server";
@@ -7,11 +8,7 @@ import { SidebarTriggerBtn } from "@/components/dashboard/sidebar-trigger";
 import AppSidebarWrapper from "@/components/dashboard/app-sidebar-wrapper";
 import StoreProvider from "@/lib/store/StoreProvider";
 
-export default async function ProtectedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+async function ProtectedContent({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -49,4 +46,16 @@ export default async function ProtectedLayout({
       </SidebarProvider>
     </StoreProvider>
   );
-}
+};
+
+export default function ProtectedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense>
+      <ProtectedContent>{children}</ProtectedContent>
+    </Suspense>
+  );
+};

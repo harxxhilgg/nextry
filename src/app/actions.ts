@@ -24,7 +24,7 @@ export async function addLocation(formData: FormData) {
       },
     });
 
-    revalidatePath("/");
+    revalidatePath("/locations");
 
     return { success: true, error: null };
   } catch (error) {

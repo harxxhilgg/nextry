@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getRoastResults } from "@/lib/roast-results";
 
 export async function GET(req: NextRequest) {
+  // Await connection immediately opts this route into dynamic rendering,
+  // preventing Next.js from prerendering it and tripping over cookies()
+  await connection();
+
+  const url = new URL(req.url);
+
   try {
     const supabase = await createClient();
     const {

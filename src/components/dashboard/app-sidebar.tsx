@@ -15,7 +15,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "../ui/sidebar";
-import { ChevronRight, Home, SquarePenIcon } from "lucide-react";
+import { ChevronRight, Cpu, Home, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -58,9 +58,10 @@ interface AppSidebarProps {
     intensity: string;
     createdAt: Date;
   }[];
+  isAdmin?: boolean;
 }
 
-export function AppSidebar({ user, roastResults }: AppSidebarProps) {
+export function AppSidebar({ user, roastResults, isAdmin }: AppSidebarProps) {
   const pathname = usePathname();
   const hasRoasts = roastResults.length > 0;
   const has15orMoreRoasts = roastResults.length >= 15;
@@ -182,6 +183,17 @@ export function AppSidebar({ user, roastResults }: AppSidebarProps) {
 
       <SidebarFooter>
         <SidebarMenu>
+          {isAdmin && (
+            <SidebarMenuItem>
+              <SidebarMenuButton isActive={pathname === "/admin"} asChild>
+                <Link href="/admin">
+                  <Cpu className="h-4 w-4" />
+                  <span>Admin</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
+
           <SidebarMenuItem>
             <UserNav user={user} />
           </SidebarMenuItem>

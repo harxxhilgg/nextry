@@ -13,6 +13,17 @@ datasource db {
   provider = "postgresql"
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id    String   @id @default(uuid())
+  email String   @unique
+  role  UserRole @default(USER)
+}
+
 model Location {
   id        String   @id @default(cuid())
   name      String
@@ -38,4 +49,11 @@ model RoastResult {
 
   @@index([userId])
   @@index([createdAt])
+}
+
+model CacheTest {
+  id        String   @id @default(cuid())
+  title     String
+  views     Int
+  createdAt DateTime @default(now())
 }

@@ -11,6 +11,7 @@ import { ImageCarousel } from "@/components/test-new/image-carousel";
 import { DrawerEx } from "@/components/test-new/drawer-ex";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { BtnSound } from "@/components/test-new/btn-sound";
 
 export default async function TestPage() {
   return (
@@ -67,6 +68,14 @@ export default async function TestPage() {
       <div className="w-full max-w-4xl space-y-6">
         <p className="text-2xl font-semibold">Drawer</p>
         <DrawerEx />
+      </div>
+
+      <div className="w-full max-w-4xl space-y-6">
+        <p className="text-2xl font-semibold">Btn Sound Test</p>
+
+        <div className="space-x-6">
+          <BtnSound />
+        </div>
       </div>
     </div>
   );

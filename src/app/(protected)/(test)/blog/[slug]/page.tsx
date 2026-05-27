@@ -12,5 +12,3 @@ export default async function Page({
 export function generateStaticParams() {
   return [{ slug: 'welcome' }, { slug: 'about' }]
 };
-
-export const dynamicParams = false;

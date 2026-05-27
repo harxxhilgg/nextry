@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { AppSidebar } from "./app-sidebar";
 import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 export default async function AppSidebarWrapper() {
   const supabase = await createClient();
@@ -12,6 +13,18 @@ export default async function AppSidebarWrapper() {
   if (!user) {
     return <AppSidebar user={{}} roastResults={[]} />;
   }
+
+  const currUser = await prisma.user.findUnique({
+    where: {
+      id: user.id,
+    },
+  });
+
+  if (!currUser) {
+    redirect("/unauthorized");
+  }
+
+  const isAdmin = currUser.role === "ADMIN";
 
   const roastResults = await prisma.roastResult.findMany({
     where: { userId: user.id },
@@ -25,5 +38,5 @@ export default async function AppSidebarWrapper() {
     },
   });
 
-  return <AppSidebar user={user} roastResults={roastResults} />;
+  return <AppSidebar user={user} roastResults={roastResults} isAdmin={isAdmin} />;
 }

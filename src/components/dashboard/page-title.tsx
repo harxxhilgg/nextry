@@ -14,20 +14,23 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { hanken } from "@/lib/fonts";
 
-// Provide friendly names for specific segments.
-// The fallback splits on hyphens and capitalizes automatically.
-// Here, (url route - "What to show on title") as an example: dashboard: "Dashboard"
+/* 
+  - Provide friendly names for specific segments.
+  - The fallback splits on hyphens and capitalizes automatically.
+  
+  - Here, (url route - "What to show on title") as an example: dashboard: "Dashboard"
+*/
 
-// const segmentTitles: Record<string, string> = {
-//   dashboard: "Dashboard",
-// };
+const segmentTitles: Record<string, string> = {
+  admin: "Admin Dashboard",
+};
 
 function formatSegmentTitle(segment: string) {
   // This is for custom title based on route (/) if not then route segment will be set as page-title
 
-  // if (segmentTitles[segment]) {
-  //   return segmentTitles[segment];
-  // }
+  if (segmentTitles[segment]) {
+    return segmentTitles[segment];
+  }
 
   return segment
     .split("-")
