@@ -98,12 +98,15 @@ export default function RedisTestPage() {
       },
       {
         loading: "Updating data...",
+
         success: () => {
           reset(); // Reset the form to empty state
           getJSON(); // Fetching updated data
           return "Data has been updated!";
         },
+
         error: "Failed to update data!",
+
         closeButton: true,
         // duration: 3000,
       }

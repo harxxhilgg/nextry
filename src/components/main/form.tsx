@@ -58,34 +58,44 @@ export function MainForm() {
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    startTransition(async () => {
-      try {
-        const formData = new FormData();
-        formData.append("name", data.name);
-        formData.append("location", data.location);
+    startTransition(() => {
+      toast.promise(
+        async () => {
+          const formData = new FormData();
 
-        const result = await addLocation(formData);
+          formData.append("name", data.name);
+          formData.append("location", data.location);
 
-        if (result.success) {
-          toast.success("Location saved successfully!", {
-            closeButton: true,
-          });
+          const result = await addLocation(formData);
 
-          form.reset();
-          router.refresh();
-        } else {
-          toast.error(result.error || "Failed to save location", {
-            closeButton: true,
-          });
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Something went wrong. Please try again.", {
+          if (!result.success) {
+            throw new Error(result.error || "Failed to save location");
+          }
+
+          return result;
+        },
+        {
+          loading: "Saving Location...",
+
+          success: () => {
+            form.reset();
+            router.refresh();
+
+            return "Location saved successfully!";
+          },
+
+          error: (err) => {
+            console.error(err);
+
+            return err.message || "Something went wrong. Please try again.";
+          },
+
           closeButton: true,
-        });
-      }
-    });
-  }
+          duration: 5000,
+        }
+      );
+    })
+  };
 
   return (
     <Card className="min-w-sm sm:w-full sm:max-w-xl">
@@ -176,6 +186,7 @@ export function MainForm() {
             variant="outline"
             onClick={() => form.reset()}
             disabled={isPending}
+            className="cursor-pointer"
           >
             Reset
           </Button>
@@ -184,7 +195,7 @@ export function MainForm() {
             type="submit"
             form="form-user-info"
             disabled={isPending}
-            className="gap-2"
+            className="gap-2 cursor-pointer"
           >
             {isPending && (
               <Tailspin size="20" stroke="3" speed="0.9" color="currentColor" />

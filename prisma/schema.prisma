@@ -24,6 +24,24 @@ model User {
   role  UserRole @default(USER)
 }
 
+enum AccessStatus {
+  GRANTED // Actual Admin
+  DENIED_ROLE // Normal user tried to look
+  DENIED_UNAUTH // Anonymous tried to look
+}
+
+model AdminAccessLog {
+  id        String       @id @default(cuid())
+  userId    String? // Optional, unauthenticated users have no ID
+  email     String? // Optional, same reason
+  ipAddress String?
+  userAgent String?
+  status    AccessStatus
+  createdAt DateTime     @default(now())
+
+  @@index([createdAt]) // Index to make sorting by date first
+}
+
 model Location {
   id        String   @id @default(cuid())
   name      String

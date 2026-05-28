@@ -1,11 +1,12 @@
+import { checkIsAdmin } from "@/lib/auth-utils";
 import prisma from "@/lib/prisma";
-import { createClient } from "@/lib/supabase/server";
 import { Metadata } from "next";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Admin - Nextry",
-  description: "Admin Page of Nextry",
+  description: "Admin Panel of Nextry",
 };
 
 export default async function AdminLayout({
@@ -13,27 +14,35 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  //  Supabase client
-  const supabase = await createClient();
+  // Get the req headers for logging
+  const headersList = await headers();
 
-  // Get logged in users' information
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Check user's status using our updated utility
+  const ipAddress = headersList.get("x-forwarded-for") || headersList.get("x-real-ip") || "Unknown";
+  const userAgent = headersList.get("user-agent") || "Unknown";
 
-  // If no user then redirect to login
-  if (!user) {
-    redirect("/login");
+  // Check user's status using updated utility
+  const { isAdmin, reason, user } = await checkIsAdmin();
+
+  // Avoid logging purely client-side navigations and auto-refreshes
+  const acceptHeader = headersList.get("accept") || "";
+  const isHtmlRequest = acceptHeader.includes("text/html");
+
+  if (isHtmlRequest) {
+    // SECURE ASYNC LOGGING (only on hard loads or initial visits)
+    prisma.adminAccessLog.create({
+      data: {
+        userId: user?.id || null,
+        email: user?.email || null,
+        ipAddress,
+        userAgent,
+        // @ts-expect-error "as any"
+        status: reason // Cast it to match prisma's AccessStatus enum
+      }
+    }).catch(err => console.error("Failed to log admin access: ", err));
   }
 
-  // Get cur
-  const currUser = await prisma.user.findUnique({
-    where: {
-      id: user.id,
-    },
-  });
-
-  if (!currUser || currUser.role !== "ADMIN") {
+  if (!isAdmin) {
     redirect("/unauthorized");
   }
 

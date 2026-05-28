@@ -13,22 +13,38 @@ export async function checkIsAdmin() {
     } = await supabase.auth.getUser();
 
     // If user not logged into supabase, deny access
-    if (!user) return false;
+    if (!user) {
+      return {
+        isAdmin: false,
+        reason: "DENIED_UNAUTH",
+        user: null,
+      };
+    }
 
-    // Try to fetch from prisma
+    // Try to fetch their role from prisma
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
       select: { role: true },
     });
 
-    // If user isn't in prisma yet, deny access
-    if (!dbUser) return false;
+    // Valid supabase user, but not in prisma yet
+    if (!dbUser) {
+      return {
+        isAdmin: false,
+        reason: "DENIED_ROLE",
+        user,
+      };
+    }
 
-    return dbUser?.role === "ADMIN";
+    if (dbUser.role === "ADMIN") {
+      return { isAdmin: true, reason: "GRANTED", user };
+    } else {
+      return { isAdmin: false, reason: "DENIED_ROLE", user };
+    }
   } catch (error) {
     // If the db crashes or network drops, swallow the error and securely kick 'em out instead of showing 500 crash page
     console.error("Auth Exception: ", error);
 
-    return false;
+    return { isAdmin: false, reason: "DENIED_UNAUTH", user: null };
   }
 }

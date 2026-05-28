@@ -1,5 +1,7 @@
 import { DeleteBtn } from "@/components/admin/delete-btn";
+import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function AdminPage() {
   // Fetch all users from your database
@@ -9,7 +11,13 @@ export default async function AdminPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="font-medium">Total Users: {allUsers.length}</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-medium">Total Users: {allUsers.length}</h2>
+
+        <Button variant="outline" size="sm" className="text-secondary" asChild>
+          <Link href="/admin/logs">Security Logs</Link>
+        </Button>
+      </div>
 
       <div>
         <ul className="space-y-3">
