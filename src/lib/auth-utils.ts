@@ -21,9 +21,17 @@ export async function checkIsAdmin() {
       };
     }
 
+    if (!user.email) {
+      return {
+        isAdmin: false,
+        reason: "DENIED_UNAUTH",
+        user,
+      };
+    }
+
     // Try to fetch their role from prisma
     const dbUser = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { email: user.email },
       select: { role: true },
     });
 

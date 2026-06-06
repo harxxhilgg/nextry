@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import prisma from "@/lib/prisma";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -19,6 +20,21 @@ export default async function LoginPage() {
   } = await supabase.auth.getUser();
 
   if (user && !error) {
+    const dbUser = await prisma.user.findFirst({
+      where: user.email ? {
+        OR: [
+          { id: user.id },
+          { email: { equals: user.email, mode: "insensitive" } },
+        ],
+      }
+        : { id: user.id },
+      select: { isBanned: true },
+    });
+
+    if (dbUser?.isBanned) {
+      redirect("/banned");
+    }
+
     redirect("/dashboard");
   }
 

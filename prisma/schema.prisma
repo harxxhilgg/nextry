@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -22,24 +16,52 @@ model User {
   id    String   @id @default(uuid())
   email String   @unique
   role  UserRole @default(USER)
+
+  warningCount Int @default(0)
+
+  isBanned     Boolean   @default(false)
+  bannedAt     DateTime?
+  bannedReason String?
 }
 
 enum AccessStatus {
-  GRANTED // Actual Admin
-  DENIED_ROLE // Normal user tried to look
-  DENIED_UNAUTH // Anonymous tried to look
+  GRANTED
+  DENIED_ROLE
+  DENIED_UNAUTH
 }
 
 model AdminAccessLog {
   id        String       @id @default(cuid())
-  userId    String? // Optional, unauthenticated users have no ID
-  email     String? // Optional, same reason
+  email     String?
+  userId    String?
   ipAddress String?
   userAgent String?
-  status    AccessStatus
   createdAt DateTime     @default(now())
+  status    AccessStatus
 
-  @@index([createdAt]) // Index to make sorting by date first
+  @@index([createdAt])
+}
+
+enum AdminActionType {
+  WARN
+  FINAL_WARN
+  RESET_WARNINGS
+  TEMP_BAN
+  PERM_BAN
+  UNBAN
+}
+
+model AdminActionsLog {
+  id           String          @id @default(cuid())
+  adminUserId  String
+  targetUserId String?
+  action       AdminActionType
+  reason       String?
+  createdAt    DateTime        @default(now())
+
+  @@index([adminUserId])
+  @@index([targetUserId])
+  @@index([createdAt])
 }
 
 model Location {
@@ -72,6 +94,6 @@ model RoastResult {
 model CacheTest {
   id        String   @id @default(cuid())
   title     String
-  views     Int
   createdAt DateTime @default(now())
+  views     Int
 }

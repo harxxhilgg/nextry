@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Logs - Nextry",
-  description: "Logs of Nextry",
+  title: "Access Logs - Nextry",
+  description: "Access Logs of Nextry",
 };
 
-export default async function LogsLayout({
+export default async function AccessLogsLayout({
   children,
 }: {
   children: React.ReactNode;

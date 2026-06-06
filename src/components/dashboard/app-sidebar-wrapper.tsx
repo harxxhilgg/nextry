@@ -14,10 +14,15 @@ export default async function AppSidebarWrapper() {
     return <AppSidebar user={{}} roastResults={[]} />;
   }
 
-  const currUser = await prisma.user.findUnique({
-    where: {
-      id: user.id,
-    },
+  const currUser = await prisma.user.findFirst({
+    where: user.email
+      ? {
+        OR: [
+          { id: user.id },
+          { email: { equals: user.email, mode: "insensitive" } },
+        ],
+      }
+      : { id: user.id },
   });
 
   if (!currUser) {

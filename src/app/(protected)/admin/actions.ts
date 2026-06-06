@@ -1,25 +1,15 @@
 "use server";
 
 import { checkIsAdmin } from "@/lib/auth-utils";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@supabase/supabase-js";
 
 export async function deleteUser(userIdToDelete: string) {
   // Ensure admin before deleting
-  const isAdmin = await checkIsAdmin();
-
-  if (!isAdmin) {
-    throw new Error("Unauthorized");
-  }
+  await requireAdminUserId();
 
   try {
-    // Supabase admin client
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    );
-
     // Delete from supabase auth first
     const { error: authError } =
       await supabaseAdmin.auth.admin.deleteUser(userIdToDelete);
@@ -29,7 +19,7 @@ export async function deleteUser(userIdToDelete: string) {
 
       return {
         success: false,
-        error: "Failed ot delete from Auth",
+        error: "Failed to delete from Auth",
       };
     }
 
@@ -41,13 +31,188 @@ export async function deleteUser(userIdToDelete: string) {
     // Refresh the admin page to remove them from the list
     revalidatePath("/admin");
 
-    return { sucess: true };
+    return { success: true };
   } catch (error) {
     console.error(error);
 
     return {
-      sucess: false,
+      success: false,
       error: "Failed to delete user",
     };
   }
+}
+
+export async function forceLogoutUser(targetUserId: string) {
+  await requireAdminUserId();
+
+  try {
+    for (const tableName of ["sessions", "refresh_tokens"] as const) {
+      const tableExists = await prisma.$queryRaw<Array<{ exists: boolean }>>`
+        SELECT to_regclass(${`auth.${tableName}`}) IS NOT NULL AS "exists"
+      `;
+
+      if (!tableExists[0]?.exists) {
+        continue;
+      }
+
+      await prisma.$executeRawUnsafe(
+        `DELETE FROM auth.${tableName} WHERE user_id = $1`,
+        targetUserId,
+      );
+    }
+
+    revalidatePath("/admin/logs/access");
+
+    return {
+      success: true,
+      message: "User sessions revoked successfully.",
+    };
+  } catch (error) {
+    console.error("Failed to force logout user:", error);
+
+    return {
+      success: false,
+      error: "Failed to force logout user",
+    };
+  }
+}
+
+export async function deleteLog(logId: string, logType: "access" | "action") {
+  await requireAdminUserId();
+
+  try {
+    let deletedLog;
+
+    if (logType === "access") {
+      deletedLog = await prisma.adminAccessLog.delete({
+        where: {
+          id: logId,
+        },
+      });
+    } else if (logType === "action") {
+      deletedLog = await prisma.adminActionsLog.delete({
+        where: {
+          id: logId,
+        },
+      });
+    }
+
+    revalidatePath(`/admin/logs/${logType}`);
+
+    return {
+      success: true,
+      data: deletedLog,
+      message: `${logType === "access" ? "Access" : "Action"} Log deleted successfully.`,
+    };
+  } catch (error) {
+    console.error(`Failed to delete ${logType} log:`, error);
+
+    return {
+      success: false,
+      message: `Failed to delete ${logType} log.`,
+    };
+  }
+}
+
+type AdminActionInput = {
+  targetUserId: string;
+  reason?: string | null;
+};
+
+async function requireAdminUserId() {
+  const auth = await checkIsAdmin();
+  if (!auth.isAdmin || !auth.user) {
+    throw new Error("Unauthorized");
+  }
+
+  return auth.user.id;
+}
+
+export async function warnUser({ targetUserId }: AdminActionInput) {
+  const adminUserId = await requireAdminUserId();
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: targetUserId },
+      data: { warningCount: { increment: 1 } },
+    }),
+    prisma.adminActionsLog.create({
+      data: {
+        adminUserId,
+        targetUserId,
+        action: "WARN",
+      },
+    }),
+  ]);
+
+  revalidatePath("/admin/logs/action");
+}
+
+export async function resetWarnings({ targetUserId }: AdminActionInput) {
+  const adminUserId = await requireAdminUserId();
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: targetUserId },
+      data: { warningCount: 0 },
+    }),
+    prisma.adminActionsLog.create({
+      data: {
+        adminUserId,
+        targetUserId,
+        action: "RESET_WARNINGS",
+      },
+    }),
+  ]);
+
+  revalidatePath("/admin/logs/action");
+}
+
+export async function permBanUser({ targetUserId, reason }: AdminActionInput) {
+  const adminUserId = await requireAdminUserId();
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: targetUserId },
+      data: {
+        isBanned: true,
+        bannedAt: new Date(),
+        bannedReason: reason ?? "PERM_BAN",
+      },
+    }),
+    prisma.adminActionsLog.create({
+      data: {
+        adminUserId,
+        targetUserId,
+        action: "PERM_BAN",
+        reason: reason ?? null,
+      },
+    }),
+  ]);
+
+  revalidatePath("/admin/logs/action");
+}
+
+export async function unbanUser({ targetUserId }: AdminActionInput) {
+  const adminUserId = await requireAdminUserId();
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: targetUserId },
+      data: {
+        isBanned: false,
+        bannedAt: null,
+        bannedReason: null,
+      },
+    }),
+    prisma.adminActionsLog.create({
+      data: {
+        adminUserId,
+        targetUserId,
+        action: "UNBAN",
+      },
+    }),
+  ]);
+
+  revalidatePath("/admin/logs/action");
 }

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
 import { Button } from "../ui/button";
-import { ArrowsClockwiseIcon } from "@phosphor-icons/react";
+import { ArrowsClockwiseIcon, CircleNotchIcon } from "@phosphor-icons/react";
 
 export function AutoRefreshLogs({ intervalSeconds = 30 }: { intervalSeconds?: number }) {
   const router = useRouter();
@@ -27,7 +27,7 @@ export function AutoRefreshLogs({ intervalSeconds = 30 }: { intervalSeconds?: nu
   };
 
   return (
-    <div className="flex items-center text-muted-foreground">
+    <div className="flex items-center text-secondary">
       <Button
         variant="outline"
         size="icon"
@@ -35,7 +35,11 @@ export function AutoRefreshLogs({ intervalSeconds = 30 }: { intervalSeconds?: nu
         onClick={handleManualRefresh}
         disabled={isPending}
       >
-        <ArrowsClockwiseIcon className={isPending ? "animate-spin ease-in-out" : ""} />
+        {isPending ? (
+          <CircleNotchIcon className="animate-spin ease-in-out" />
+        ) : (
+          <ArrowsClockwiseIcon />
+        )}
       </Button>
     </div>
   );

@@ -1,5 +1,18 @@
+import prisma from "@/lib/prisma";
 import { createServerClient } from "@supabase/ssr";
 import { NextRequest, NextResponse } from "next/server";
+
+function isAdminPath(pathname: string) {
+  return pathname === "/admin" || pathname.startsWith("/admin/");
+}
+
+function getIp(request: NextRequest) {
+  const forwarded = request.headers.get("x-forwarded-for");
+
+  if (forwarded) return forwarded.split(",")[0].trim();
+
+  return request.headers.get("x-real-ip");
+}
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
@@ -32,7 +45,53 @@ export async function proxy(request: NextRequest) {
   );
 
   // CRITICAL: Must await to refresh session
-  await supabase.auth.getUser();
+  const { data: authData } = await supabase.auth.getUser();
+
+  const pathname = request.nextUrl.pathname;
+
+  if (isAdminPath(pathname)) {
+    const email = authData.user?.email ?? null;
+
+    if (email) {
+      const user = await prisma.user.findUnique({ where: { email } });
+
+      if (user && user.role !== "ADMIN") {
+        await prisma.$transaction([
+          prisma.user.update({
+            where: { id: user.id },
+            data: { warningCount: { increment: 1 } },
+          }),
+          prisma.adminAccessLog.create({
+            data: {
+              email: user.email,
+              userId: user.id,
+              ipAddress: getIp(request),
+              userAgent: request.headers.get("user-agent"),
+              status: "DENIED_ROLE",
+            },
+          }),
+        ]);
+
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
+      }
+
+      if (user?.isBanned) {
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
+      }
+    } else {
+      await prisma.adminAccessLog.create({
+        data: {
+          email: null,
+          userId: null,
+          ipAddress: getIp(request),
+          userAgent: request.headers.get("user-agent"),
+          status: "DENIED_UNAUTH",
+        },
+      });
+
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
+    }
+  }
 
   return response;
 }

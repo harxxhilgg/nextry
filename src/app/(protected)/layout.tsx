@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { createClient } from "@/lib/supabase/server";
+import prisma from "@/lib/prisma";
+import { WarningBanner } from "@/components/main/warning-banner";
 import { redirect } from "next/navigation";
 import { PageTitle } from "@/components/dashboard/page-title";
 import { SidebarTriggerBtn } from "@/components/dashboard/sidebar-trigger";
@@ -18,6 +20,7 @@ async function ProtectedContent({ children }: { children: React.ReactNode }) {
     redirect("/login");
   }
 
+
   const serializedUser = {
     id: user.id,
     email: user.email || null,
@@ -25,9 +28,32 @@ async function ProtectedContent({ children }: { children: React.ReactNode }) {
     created_at: user.created_at || null,
   };
 
+  const dbUser = await prisma.user.findFirst({
+    where: user.email
+      ? {
+        OR: [
+          { id: user.id },
+          { email: { equals: user.email, mode: "insensitive" } },
+        ],
+      }
+      : { id: user.id },
+    select: { warningCount: true, isBanned: true },
+  });
+
+  if (!dbUser) {
+    redirect("/unauthorized");
+  }
+
+  if (dbUser?.isBanned) {
+    redirect("/banned");
+  }
+
+  const warningCount = dbUser?.warningCount ?? 0;
+
   return (
     <StoreProvider initialUser={serializedUser}>
       <SidebarProvider>
+        <WarningBanner warningCount={warningCount} />
         <div className="flex min-h-screen w-full">
           <AppSidebarWrapper />
 
