@@ -1,11 +1,12 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "New Roast - Nextry",
-  description: "Roaster page of Nextry",
+  title: "Unauthorized - Nextry",
+  description: "Unauthorized access - Nextry",
 };
 
-export default function TestGenAILayout({
+
+export default function UnauthorizedLayout({
   children,
 }: {
   children: React.ReactNode;

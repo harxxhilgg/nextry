@@ -37,7 +37,7 @@ export function WarningBanner({ warningCount }: WarningBannerProps) {
 
   return (
     <div className="pointer-events-none fixed inset-x-4 top-4 z-50 flex justify-center">
-      <div className="pointer-events-auto flex w-full max-w-xl items-center justify-between gap-3 rounded-xl border border-amber-300/60 bg-amber-950/90 px-5 py-4 text-amber-100 shadow-lg">
+      <div className="pointer-events-auto flex w-full max-w-xl items-center justify-between gap-3 rounded-xl border border-amber-300/60 bg-amber-950/10 px-5 py-4 text-amber-100 shadow-lg">
         <div className="text-sm font-medium space-y-0.5">
           <p>You have {warningCount} warning{warningCount === 1 ? "" : "s"} on your account.</p>
 

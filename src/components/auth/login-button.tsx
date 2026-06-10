@@ -46,7 +46,7 @@ export function LoginButton() {
         onClick={handleGoogleLogin}
         className="cursor-pointer font-semibold relative pl-10 rounded-xl"
       >
-        <GoogleLogoIcon className="absolute left-4 top-1/2 -translate-y-1/2" />
+        <GoogleLogoIcon className="absolute left-4 top-1/2 -translate-y-1/2" style={{ height: 20, width: 20 }} />
         <span className="mx-auto">Sign in with Google</span>
       </Button>
 
@@ -56,7 +56,7 @@ export function LoginButton() {
         onClick={handleGitHubLogin}
         className="cursor-pointer font-semibold relative pl-10 rounded-xl"
       >
-        <GithubLogoIcon className="absolute left-4 top-1/2 -translate-y-1/2" />
+        <GithubLogoIcon className="absolute left-4 top-1/2 -translate-y-1/2" style={{ height: 20, width: 20 }} weight="duotone" />
         <span className="mx-auto">Sign in with GitHub</span>
       </Button>
 
@@ -66,7 +66,7 @@ export function LoginButton() {
         onClick={handleDiscordLogin}
         className="cursor-pointer font-semibold relative pl-10 rounded-xl text-primary bg-[#5865F2] hover:bg-[#5865F295]"
       >
-        <DiscordLogoIcon className="absolute left-4 top-1/2 -translate-y-1/2" />
+        <DiscordLogoIcon className="absolute left-4 top-1/2 -translate-y-1/2" style={{ height: 20, width: 20 }} weight="duotone" />
         <span className="mx-auto">Sign in with Discord</span>
       </Button>
     </>

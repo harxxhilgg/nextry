@@ -20,8 +20,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   AirTrafficControlIcon,
-  FlyingSaucerIcon,
   MapPinAreaIcon,
+  OnigiriIcon,
 } from "@phosphor-icons/react";
 import { UserNav } from "./user-nav";
 import {
@@ -73,14 +73,14 @@ export function AppSidebar({ user, roastResults, isAdmin }: AppSidebarProps) {
           href="/dashboard"
           className="flex items-center group-data-[collapsible=icon]:justify-center p-2 gapk-2 mt-2 rounded-lg transition-all duration-200 cursor-pointer hover:bg-black/10 hover:dark:bg-white/10 text-secondary hover:text-primary"
         >
-          <FlyingSaucerIcon
-            className="group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-4"
-            size={24}
-            color="currentColor"
+          <OnigiriIcon
+            className="group-data-[collapsible=icon]:w-2 group-data-[collapsible=icon]:h-2"
+            size="20"
+            weight="duotone"
           />
 
           <p className="font-semibold text-primary group-data-[collapsible=icon]:hidden ml-2">
-            Saucer.
+            Nextry Inc.
           </p>
         </Link>
       </SidebarHeader>

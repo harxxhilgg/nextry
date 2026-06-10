@@ -40,7 +40,7 @@ export function AccessDrawer({
   } | null>(null);
   const [loadedUserId, setLoadedUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
   const targetUserId = log.userId;
 
   React.useEffect(() => {
@@ -93,62 +93,92 @@ export function AccessDrawer({
     : "Unknown";
 
   const handleForceLogout = () => {
-    if (!targetUserId) {
-      toast.error("No user found for this log.");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!targetUserId) {
+          throw new Error("No user found for this log");
+        }
 
-    startTransition(async () => {
-      try {
         const result = await forceLogoutUser(targetUserId);
 
         if (!result.success) {
-          toast.error(result.error ?? "Failed to force logout user.");
-          return;
+          throw new Error(result.message);
         }
 
-        toast.success(result.message ?? "User sessions revoked.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to force logout user.");
-      }
-    });
+        return result;
+      },
+      {
+        loading: `Logging out user ${targetUserId}`,
+
+        success: (result) => {
+          return result.message;
+        },
+
+        error: (err) => {
+          console.error(err);
+          return err.message || `Failed to force logout user ${targetUserId}`;
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   const handleWarnUser = () => {
-    if (!targetUserId) {
-      toast.error("No user found for this log.");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!targetUserId) {
+          throw new Error("No user found for this log.");
+        }
 
-    startTransition(async () => {
-      try {
-        await warnUser({ targetUserId });
-        toast.success("Warning sent.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to send warning.");
-      }
-    });
+        const result = await warnUser({ targetUserId });
+
+        return result;
+      },
+      {
+        loading: `User ${targetUserId} is being warned...`,
+
+        success: `User ${targetUserId} has been warned`,
+
+        error: (err) => {
+          console.error(err);
+          return err.message || "Failed to send warning";
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   const handleBanUser = () => {
-    if (!targetUserId) {
-      toast.error("No user found for this log.");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!targetUserId) {
+          throw new Error("No user found for this log");
+        }
 
-    const reason = window.prompt("Reason (optional)") ?? "";
+        const reason = window.prompt("Reason (optional)") ?? "";
 
-    startTransition(async () => {
-      try {
-        await permBanUser({ targetUserId, reason: reason.trim() || null });
-        toast.success("User permanently banned.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to ban user.");
-      }
-    });
+        const result = await permBanUser({ targetUserId, reason: reason.trim() || null });
+
+        return result;
+      },
+      {
+        loading: `Banning user ${targetUserId}`,
+
+        success: `User ${targetUserId} banned permanently`,
+
+        error: (err) => {
+          console.error(err);
+          return err.message || `Failed to ban user ${targetUserId}`;
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   return (

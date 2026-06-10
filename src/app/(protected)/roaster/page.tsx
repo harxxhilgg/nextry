@@ -1,9 +1,12 @@
 import AIChat from "@/components/roaster/ai-chat";
+import { NotWorkingToast } from "@/components/roaster/not-working-toast";
 
 export default async function GenAIPage() {
   return (
     <>
-      <h1 className="text-3xl font-bold mb-10">Roaster</h1>
+      <h1 className="text-2xl font-semibold mb-10">Roaster</h1>
+
+      <NotWorkingToast />
 
       <main className="flex flex-col gap-10 px-4 max-w-2xl mx-auto">
         <AIChat />

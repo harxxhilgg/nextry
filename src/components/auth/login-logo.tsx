@@ -9,7 +9,7 @@ export function LoginLogo() {
         <PolygonIcon size={24} className="text-white dark:text-black" />
       </div>
 
-      <p className="font-semibold">Nextry Inc.</p>
+      <p className="font-semibold text-secondary">Nextry Inc.</p>
     </div>
   );
 }

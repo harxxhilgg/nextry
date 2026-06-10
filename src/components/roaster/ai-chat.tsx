@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -50,6 +50,14 @@ export default function AIChat() {
     "level",
     parseAsString.withDefault("medium"),
   );
+
+  useEffect(() => {
+    toast.info("This page may not work properly!", {
+      description: "Because of the token limitations or our subscription may not be active.",
+      closeButton: true,
+      duration: 10000, // 10s
+    });
+  }, []);
 
   const form = useForm<RoastValues>({
     resolver: zodResolver(roastSchema),

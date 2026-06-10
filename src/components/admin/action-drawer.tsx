@@ -49,7 +49,7 @@ export function ActionDrawer({
   } | null>(null);
   const [isLoadingUser, setIsLoadingUser] = useState(false);
   const [isLoadingAdmin, setIsLoadingAdmin] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   React.useEffect(() => {
     if (!drawerOpen) return;
@@ -105,73 +105,113 @@ export function ActionDrawer({
   const targetUserId = log.targetUserId;
 
   const handleWarnUser = () => {
-    if (!targetUserId) {
-      toast.error("No target user found for this log.");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!targetUserId) {
+          throw new Error("No target user found for this log");
+        }
 
-    startTransition(async () => {
-      try {
-        await warnUser({ targetUserId });
-        toast.success("Warning sent.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to send warning.");
-      }
-    });
+        const result = await warnUser({ targetUserId });
+
+        return result;
+      },
+      {
+        loading: `User ${targetUserId} is being warned...`,
+
+        success: `User ${targetUserId} has been warned`,
+
+        error: (err) => {
+          console.error(err);
+          return err.message || "Failed to send warning";
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   const handleResetWarnings = () => {
-    if (!targetUserId) {
-      toast.error("No target user found for this log.");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!targetUserId) {
+          throw new Error("No target user found for this log");
+        }
 
-    startTransition(async () => {
-      try {
-        await resetWarnings({ targetUserId });
-        toast.success("Warning count reset.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to reset warning count.");
-      }
-    });
+        const result = resetWarnings({ targetUserId });
+
+        return result;
+      },
+      {
+        loading: `Warning count is being resetted for user ${targetUserId}`,
+
+        success: `Warning count resetted for user ${targetUserId}`,
+
+        error: (err) => {
+          console.error(err);
+          return err.message || "Failed to reset warning count";
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   const handleBanUser = () => {
-    if (!targetUserId) {
-      toast.error("No target user found for this log.");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!targetUserId) {
+          throw new Error("No target user found for this log");
+        }
 
-    const reason = window.prompt("Reason (optional)") ?? "";
+        const reason = window.prompt("Reason (optional)") ?? "";
 
-    startTransition(async () => {
-      try {
-        await permBanUser({ targetUserId, reason: reason.trim() || null });
-        toast.success("User permanently banned.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to ban user.");
-      }
-    });
+        const result = await permBanUser({ targetUserId, reason: reason.trim() || null });
+
+        return result;
+      },
+      {
+        loading: `Banning user ${targetUserId}`,
+
+        success: `User ${targetUserId} has been banned permanently`,
+
+        error: (err) => {
+          console.error(err);
+          return err.message || `Failed to ban user ${targetUserId}`;
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   const handleUnbanUser = () => {
-    if (!targetUserId) {
-      toast.error("No target user found for this log.");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!targetUserId) {
+          throw new Error("No target user found for this log");
+        }
 
-    startTransition(async () => {
-      try {
-        await unbanUser({ targetUserId });
-        toast.success("User unbanned.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to unban user.");
-      }
-    });
+        const result = await unbanUser({ targetUserId });
+
+        return result;
+      },
+      {
+        loading: `User ${targetUserId} is being unbanned`,
+
+        success: `User ${targetUserId} has been unbanned`,
+
+        error: (err) => {
+          console.error(err);
+          return err.message || `Failed to unban user ${targetUserId}`;
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   return (

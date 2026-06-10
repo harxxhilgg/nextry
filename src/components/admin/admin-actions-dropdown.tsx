@@ -30,19 +30,36 @@ export function AdminActionsDropdown({ log }: { log: LogItem }) {
   const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
 
   const deleteLogById = async (logId: string, logType?: string) => {
-    if (!logType || (logType !== "access" && logType !== "action")) {
-      console.error("Invalid log type");
-      return;
-    }
+    toast.promise(
+      async () => {
+        if (!logType || (logType !== "access" && logType !== "action")) {
+          throw new Error("Invalid log type");
+        }
 
-    const result = await deleteLog(logId, logType as "access" | "action");
+        const result = await deleteLog(logId, logType);
 
-    if (!result.success) {
-      toast.error(result.message);
-      return;
-    }
+        if (!result.success) {
+          throw new Error(result.message);
+        }
 
-    toast.success(result.message);
+        return result;
+      },
+      {
+        loading: "Deleting log...",
+
+        success: (result) => {
+          return result.message;
+        },
+
+        error: (err) => {
+          console.error(err);
+          return err.message || "Failed to delete log...";
+        },
+
+        closeButton: true,
+        duration: 5000,
+      },
+    );
   };
 
   return (
