@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "Login page - Nextry",
 };
 
-export default function LoginLayout({
+export default async function LoginLayout({
   children,
 }: {
   children: React.ReactNode;

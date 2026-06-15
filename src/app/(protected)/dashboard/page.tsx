@@ -11,6 +11,7 @@ export default function Page() {
 };
 
 export async function Dashboard() {
+  // Get logged in user's details
   const supabase = await createClient();
   const {
     data: { user },
