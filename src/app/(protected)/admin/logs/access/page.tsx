@@ -8,6 +8,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import AccessLogsLoading from "./loading";
+import { delay } from "@/lib/utils";
 
 export default function Page() {
   return (
@@ -71,6 +72,7 @@ export default function Page() {
 
 export async function AccessLogs() {
   await connection();
+  await delay(1000); // 1s
 
   // Fetch latest 50 logs, newest first
   const logs = await prisma.adminAccessLog.findMany({

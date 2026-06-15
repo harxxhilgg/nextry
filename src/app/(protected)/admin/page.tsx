@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Suspense } from "react";
 import AdminDashboardLoading from "./loading";
+import { delay } from "@/lib/utils";
 
 export default function Page() {
   return (
@@ -14,6 +15,8 @@ export default function Page() {
 };
 
 export async function AdminDashboard() {
+  await delay(1000); // 1s
+
   // Fetch all users from your database
   const allUsers = await prisma.user.findMany({
     orderBy: { email: "asc" },

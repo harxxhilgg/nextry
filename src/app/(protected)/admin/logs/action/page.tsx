@@ -80,7 +80,7 @@ export default function Page() {
 
 export async function ActionLogs() {
   await connection();
-  await delay(5000);
+  await delay(1000); // 1s
 
   // Fetch latest 50 logs, newest first
   const logs = await prisma.adminActionsLog.findMany({
