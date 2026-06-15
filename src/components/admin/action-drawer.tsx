@@ -223,7 +223,7 @@ export function ActionDrawer({
       ) : null}
 
       <DrawerContent>
-        {/* User Section */}
+        {/* User Details */}
         <DrawerHeader className="gap-3">
           <h2 className="font-medium text-sm text-secondary mb-4">User Details</h2>
 
@@ -249,6 +249,7 @@ export function ActionDrawer({
         </DrawerHeader>
 
         <div className="px-4 py-3 space-y-4">
+          {/* User Details */}
           <div className="flex flex-col gap-4 text-sm">
             <div className="space-y-0.5">
               <p className="text-muted-foreground">User ID</p>
@@ -272,8 +273,9 @@ export function ActionDrawer({
 
             <Separator orientation="horizontal" />
 
-            <div>
-              <span className="text-lg font-semibold">
+            {/* Actions */}
+            <div className="flex flex-col gap-4">
+              <div className="text-[17px] font-semibold">
                 <span className={`
                     px-2 py-1 rounded
                     ${log.action === "WARN" ? "bg-orange-500/20 text-orange-500"
@@ -284,13 +286,20 @@ export function ActionDrawer({
                   {log.action}
                 </span> {" "}
                 by {adminResult?.name}
-              </span>
+              </div>
+
+              {log.reason && (
+                <div className="text-sm">
+                  <p className="text-muted-foreground">Reason</p>
+                  <p className="font-medium break-all">{log.reason}</p>
+                </div>
+              )}
             </div>
           </div>
 
           <Separator orientation="horizontal" />
 
-          {/* Admin Section */}
+          {/* Admin Details */}
           <div className="flex flex-col gap-6">
             <h2 className="font-medium text-sm text-secondary mb-1">Admin Details</h2>
 
@@ -331,6 +340,7 @@ export function ActionDrawer({
           </div>
         </div>
 
+        {/* Action Buttons */}
         <DrawerFooter>
           <div className="flex gap-2">
             <Button variant="outline" className="flex-1 cursor-pointer" disabled={isPending} onClick={handleWarnUser}>
