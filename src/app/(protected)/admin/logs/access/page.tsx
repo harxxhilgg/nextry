@@ -6,18 +6,12 @@ import prisma from "@/lib/prisma";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { connection } from "next/server";
+import { Suspense } from "react";
+import AccessLogsLoading from "./loading";
 
-export default async function AccessLogsPage() {
-  await connection();
-
-  // Fetch latest 50 logs, newest first
-  const logs = await prisma.adminAccessLog.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  });
-
+export default function Page() {
   return (
-    <div className="flex flex-col gap-4">
+    <>
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight">Access Logs</h1>
 
@@ -40,7 +34,7 @@ export default async function AccessLogsPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 tracking-wide">
+      <div className="flex flex-col gap-2 tracking-wide mt-4">
         <div className="flex gap-2 items-center">
           <span className="px-2 py-1 rounded text-xs font-semibold bg-green-500/20 text-green-500">GRANTED</span>
 
@@ -68,6 +62,24 @@ export default async function AccessLogsPage() {
 
       <h2 className="text-xl font-bold tracking-tight mt-4">Logs</h2>
 
+      <Suspense fallback={<AccessLogsLoading />}>
+        <AccessLogs />
+      </Suspense>
+    </>
+  );
+};
+
+export async function AccessLogs() {
+  await connection();
+
+  // Fetch latest 50 logs, newest first
+  const logs = await prisma.adminAccessLog.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 50,
+  });
+
+  return (
+    <div className="flex flex-col mt-4">
       {/* Logs Table */}
       <div className="rounded-lg border bg-background overflow-hidden">
         <Table>

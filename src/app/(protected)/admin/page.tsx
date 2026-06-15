@@ -2,8 +2,18 @@ import { DeleteBtn } from "@/components/admin/delete-btn";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
+import { Suspense } from "react";
+import AdminDashboardLoading from "./loading";
 
-export default async function AdminPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<AdminDashboardLoading />}>
+      <AdminDashboard />
+    </Suspense>
+  )
+};
+
+export async function AdminDashboard() {
   // Fetch all users from your database
   const allUsers = await prisma.user.findMany({
     orderBy: { email: "asc" },
